@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<ehtml xmlns:ext="http://www.w3.org/2001/XMLSchema">
+	<ext:form tbar='tb1'>
+		<ext:field id="userId" type="number">用户id</ext:field>
+		<ext:field id="userName">用户名</ext:field>
+	</ext:form>
+	<ext:toolbar id="tb1">
+		<ext:button id="submit" click="doSubmit">提交</ext:button>
+		<ext:button id="clear" click="doCancel">清空</ext:button>
+	</ext:toolbar>
+	<ext:script>
+		onReady : function() {
+			alert('init');
+		},
+		doSubmit : function() {
+			alert('提交')
+		},
+		doCancel : function() {
+			alert('清空')
+		}
+	</ext:script>
+</ehtml>

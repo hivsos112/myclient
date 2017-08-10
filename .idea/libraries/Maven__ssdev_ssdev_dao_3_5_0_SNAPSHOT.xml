@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: ssdev:ssdev-dao:3.5.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://D:/MAVEN_HOME/repository/ssdev/ssdev-dao/3.5.0-SNAPSHOT/ssdev-dao-3.5.0-20170614.091302-20.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://D:/MAVEN_HOME/repository/ssdev/ssdev-dao/3.5.0-SNAPSHOT/ssdev-dao-3.5.0-20170614.091302-20-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://D:/MAVEN_HOME/repository/ssdev/ssdev-dao/3.5.0-SNAPSHOT/ssdev-dao-3.5.0-20170614.091302-20-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

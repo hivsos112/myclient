@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: ssdev:ssdev-core:3.5.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://D:/MAVEN_HOME/repository/ssdev/ssdev-core/3.5.0-SNAPSHOT/ssdev-core-3.5.0-20170627.072650-17.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://D:/MAVEN_HOME/repository/ssdev/ssdev-core/3.5.0-SNAPSHOT/ssdev-core-3.5.0-20170627.072650-17-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://D:/MAVEN_HOME/repository/ssdev/ssdev-core/3.5.0-SNAPSHOT/ssdev-core-3.5.0-20170627.072650-17-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

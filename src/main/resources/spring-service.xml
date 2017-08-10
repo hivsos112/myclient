@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<s:beans xmlns:s="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.bsoft.com.cn/schema/ssdev"
+         xmlns:ssdev="http://www.bsoft.com.cn/schema/ssdev"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.bsoft.com.cn/schema/ssdev
+						http://www.bsoft.com.cn/schema/ssdev/ssdev.xsd">
+
+    <s:bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <s:property name="location" value="classpath:example.properties"/>
+    </s:bean>
+
+    <applicationDomain name="phis" registryAddress="zookeeper://${zookeeper.server}"
+                       packagePrefix="com.bsoft"/>
+
+    <connector url="tcp://${rpc.server}?codec=hessian">
+        <ssdev:filter class="ctd.net.rpc.server.filter.support.JSONBytesPayloadFilter"/>
+    </connector>
+
+    <broadcast port="9032"/>
+    <publisher id="publisher" local="true"/>
+</s:beans>

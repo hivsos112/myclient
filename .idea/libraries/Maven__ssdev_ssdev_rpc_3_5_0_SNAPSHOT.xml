@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: ssdev:ssdev-rpc:3.5.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://D:/MAVEN_HOME/repository/ssdev/ssdev-rpc/3.5.0-SNAPSHOT/ssdev-rpc-3.5.0-20170718.081702-21.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://D:/MAVEN_HOME/repository/ssdev/ssdev-rpc/3.5.0-SNAPSHOT/ssdev-rpc-3.5.0-20170718.081702-21-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://D:/MAVEN_HOME/repository/ssdev/ssdev-rpc/3.5.0-SNAPSHOT/ssdev-rpc-3.5.0-20170718.081702-21-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

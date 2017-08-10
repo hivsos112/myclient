@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ssdev="http://www.bsoft.com.cn/schema/ssdev"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.bsoft.com.cn/schema/ssdev
+		http://www.bsoft.com.cn/schema/ssdev/ssdev.xsd">
+
+    <!-- accessTokenController -->
+    <ssdev:dao id="accessTokenDAO" class="ctd.persistence.support.impl.access.AccessTokenDAO"/>
+    <bean id="accessTokenLoader" class="ctd.persistence.support.impl.access.AccessTokenLocalLoader"/>
+    <bean id="accessTokenUpdater" class="ctd.persistence.support.impl.access.AccessTokenUpdater"/>
+    <bean id="accessTokenController" class="ctd.access.AccessTokenController">
+        <property name="loader" ref="accessTokenLoader"/>
+        <property name="updater" ref="accessTokenUpdater"/>
+    </bean>
+    <bean id="accessTokenWatcher" class="ctd.access.AccessTokenWatcher" lazy-init="false">
+        <property name="controller" ref="accessTokenController"/>
+    </bean>
+    <ssdev:service id="accessTokenRemoteLoader" class="ctd.access.loader.AccessTokenRemoteLoader"/>
+    <ssdev:service id="accessTokenRemoteUpdater" ref="accessTokenUpdater"/>
+
+    <!-- userController -->
+    <ssdev:dao id="userRoleTokenDAO" class="ctd.persistence.support.impl.user.UserRoleTokenDAO"/>
+    <ssdev:dao id="userDAO" class="ctd.persistence.support.impl.user.UserDAO" serviceId="userService"/>
+    <bean id="userLoader" class="ctd.persistence.support.impl.user.UserLocalLoader">
+        <property name="userDAO" ref="userDAO"/>
+    </bean>
+    <bean id="userUpdater" class="ctd.persistence.support.impl.user.UserUpdater">
+        <property name="userDAO" ref="userDAO"/>
+    </bean>
+    <bean id="userController" class="ctd.account.user.UserController">
+        <property name="loader" ref="userLoader"/>
+        <property name="updater" ref="userUpdater"/>
+    </bean>
+    <bean id="userWatcher" class="ctd.account.user.UserWatcher" lazy-init="false">
+        <property name="controller" ref="userController"/>
+    </bean>
+    <ssdev:service id="userRemoteLoader" class="ctd.account.user.loader.UserRemoteLoader"/>
+    <ssdev:service id="userRemoteUpdater" ref="userUpdater"/>
+
+    <!-- roleController -->
+    <ssdev:dao id="roleDAO" class="ctd.persistence.support.impl.role.RoleDAO"/>
+    <bean id="roleLoader" class="ctd.persistence.support.impl.role.RoleLocalLoader">
+        <property name="roleDAO" ref="roleDAO"/>
+    </bean>
+    <bean id="roleUpdater" class="ctd.persistence.support.impl.role.RoleUpdater">
+        <property name="roleDAO" ref="roleDAO"/>
+    </bean>
+    <bean id="roleController" class="ctd.account.role.RoleController">
+        <property name="loader" ref="roleLoader"/>
+        <property name="updater" ref="roleUpdater"/>
+    </bean>
+    <bean id="roleWatcher" class="ctd.account.role.RoleWatcher" lazy-init="false"/>
+    <ssdev:service id="roleRemoteLoader" class="ctd.account.role.loader.RoleRemoteLoader"/>
+    <ssdev:service id="roleRemoteUpdater" ref="roleUpdater"/>
+
+    <!-- dictionaryController -->
+    <bean id="dictionaryLocalLoader" class="ctd.dictionary.loader.DictionaryLocalLoader"/>
+    <bean id="dictionaryDynLoader" class="ctd.mixin.loader.support.DynDictionaryLoader">
+        <property name="localDomainLoader" ref="dictionaryLocalLoader"/>
+    </bean>
+
+    <bean id="dictionaryUpdater" class="ctd.dictionary.updater.DictionaryUpdater"/>
+    <bean id="dictionaryController" class="ctd.dictionary.DictionaryController">
+        <property name="loader" ref="dictionaryDynLoader"/>
+        <property name="updater" ref="dictionaryUpdater"/>
+    </bean>
+    <bean id="dictionaryWatcher" class="ctd.dictionary.DictionaryWatcher" lazy-init="false">
+        <property name="controller" ref="dictionaryController"/>
+    </bean>
+    <ssdev:service id="dictionaryRemoteLoader" class="ctd.dictionary.loader.DictionaryRemoteLoader"/>
+    <ssdev:service id="dictionaryService" class="ctd.dictionary.service.DictionaryLocalService"/>
+
+    <bean id="mvcDictionaryLoader" class="ctd.mvc.controller.support.DictionaryLoader">
+        <property name="expiresSeconds" value="15"/>
+        <property name="localService" ref="dictionaryService"/>
+    </bean>
+
+    <!-- applicationController -->
+    <bean id="applicationController" class="ctd.app.ApplicationController"/>
+    <bean id="applicationWatcher" class="ctd.app.ApplicationWatcher" lazy-init="false">
+        <property name="controller" ref="applicationController"/>
+    </bean>
+    <ssdev:service id="applicationRemoteLoader" class="ctd.app.loader.ApplicationRemoteLoader"/>
+
+    <bean id="mvcLogonManager" class="ctd.mvc.controller.support.LogonManager">
+        <property name="expiresSeconds" value="15"/>
+        <property name="encryptEnable" value="false"/>
+    </bean>
+
+    <bean id="mvcStaticResourceLoader" class="ctd.mvc.controller.support.StaticResourceLoader">
+        <property name="expiresSeconds" value="15"/>
+        <property name="tryLoadCompressCss" value="false"/>
+    </bean>
+
+    <bean id="globalEventExecFactory" class="ctd.util.event.GlobalEventExecFactory" init-method="init"
+          destroy-method="shutdown">
+        <property name="threads" value="50"/>
+    </bean>
+
+    <bean id="threadPoolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="10"/>
+        <property name="maxPoolSize" value="50"/>
+        <property name="queueCapacity" value="100"/>
+        <property name="keepAliveSeconds" value="60"/>
+        <property name="rejectedExecutionHandler">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+        </property>
+    </bean>
+</beans>
