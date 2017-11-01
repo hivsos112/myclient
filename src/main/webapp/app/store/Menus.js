@@ -5,12 +5,12 @@ Ext.define('MyApp.store.Menus', {
 				text : '功能菜单',
 				expanded : true,
 				children : [{
-							text : '例子',
+							text : '监控信息',
 							expanded : true,
 							children : [{
 										leaf : true,
-										text : '例子一',
-										script : "MyApp.view.example.myform"
+										text : 'CPU使用率',
+										script : "MyApp.view.chart.SystemCpuUsage"
 									}
 
 							]

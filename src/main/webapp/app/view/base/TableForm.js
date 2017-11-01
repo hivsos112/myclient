@@ -19,7 +19,6 @@ Ext.define('MyApp.view.base.TableForm', {
 				width : '100%',
 				minWidth : 280
 			},
-
 			buttons : ['->', {
 						text : '保存',
 						cmd : 'save',

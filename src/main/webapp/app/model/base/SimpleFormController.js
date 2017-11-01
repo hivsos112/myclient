@@ -10,9 +10,20 @@ Ext.define('MyApp.model.base.SimpleFormController', {
 				}
 			},
 			doSave : function() {
-				var form = this.getView().getForm();
-				var v = form.findField("first").getValue();
-				alert("first value :" + v)
+				//var form = this.getView().getForm();
+				//var v = form.findField("first").getValue();
+				//alert("first value :" + v)
+                var res = Ext.Ajax.request({
+                    url: '*.jsonRequest',
+                    async: false,
+                    method: 'POST',
+                    jsonData: {
+                        serviceId: "phis.common",
+                        method: "sendMessage",
+                        body: ['123']
+                    }
+                });
+
 			},
 			doCancel : function() {
 				this.getView().getForm().reset()

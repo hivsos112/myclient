@@ -20,4 +20,5 @@
 
     <broadcast port="9032"/>
     <publisher id="publisher" local="true"/>
+    <ssdev:rtm-broker id="rtmBroker"/>
 </s:beans>

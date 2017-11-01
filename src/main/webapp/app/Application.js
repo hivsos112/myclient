@@ -5,17 +5,21 @@
  */
 Ext.define('MyApp.Application', {
     extend: 'Ext.app.Application',
-    
+
     name: 'MyApp',
-    requires : ['MyApp.store.Menus','MyApp.store.Personnel'],
+    requires: ['MyApp.store.Menus', 'MyApp.store.Personnel',
+        'MyApp.view.base.LoginWin',
+        'MyApp.view.base.MyDesktop'],
 
     stores: [
         // TODO: add global / shared stores here
-    	'Menus'
+        'Menus'
     ],
-    
+
     launch: function () {
-        // TODO - Launch the application
+       Ext.Context.loginWin =  Ext.create({
+            xtype:  'login'
+        });
     },
     onAppUpdate: function () {
         Ext.Msg.confirm('Application Update', '应用已经更新,是否刷新?',

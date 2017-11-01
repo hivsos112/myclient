@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tenant id="zs" name="金山云" type="Organ">
+    <installedApps>
+        <app id="hcn.base.Base"/>
+    </installedApps>
+    <unit id="H01" name="第一人民医院" type="Organ">
+        <properties>
+            <p name="icon">area.png</p>
+        </properties>
+        <unit id="H01.01" name="第一人民医院分院区" type="Organ">
+            <properties>
+                <p name="address"></p>
+                <p name="printPort">COM1</p>
+            </properties>
+        </unit>
+    </unit>
+    <unit id="H02.02" name="第二人民医院" type="Organ">
+        <properties>
+            <p name="address"></p>
+            <p name="phone"></p>
+        </properties>
+    </unit>
+</tenant>

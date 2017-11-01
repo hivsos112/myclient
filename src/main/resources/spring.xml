@@ -6,6 +6,7 @@
     <import resource="spring-service.xml"/>
     <!-- 基础 -->
     <import resource="spring-base.xml"/>
+    <import resource="spring-hibernate.xml"/>
     <import resource="classpath:spring-mvc.xml"/>
-
+    <import resource="spring-monitor.xml" />
 </beans>

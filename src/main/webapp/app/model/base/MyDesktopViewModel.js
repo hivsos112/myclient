@@ -9,6 +9,8 @@ Ext.define('MyApp.model.base.MyDesktopViewModel', {
      */
     data: {  
         appName: '基层医疗V3.0',
-        userName: '管理员'
+        userName: '管理员',
+        roleName : '',
+        loginTime : '',
     }
 });  
