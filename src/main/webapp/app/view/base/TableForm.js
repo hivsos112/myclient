@@ -1,16 +1,9 @@
 Ext.define('MyApp.view.base.TableForm', {
     extend: 'MyApp.view.base.BaseForm',
     xtype: 'table-form',
-    initPanel: function () {
+    exConfig: function (cfg) {
         var me = this;
-        if (me.form)
-            return me.form;
-        if (!me.entryName) {
-            return;
-        }
-        var cfg = {
-            title: me.title,
-            defaultType: 'textfield',
+        Ext.apply(cfg, {
             bodyPadding: 10,
             layout: {
                 type: 'table',
@@ -29,20 +22,8 @@ Ext.define('MyApp.view.base.TableForm', {
                 xtype: 'textfield',
                 width: '100%',
                 minWidth: me.minWidth || 280
-            },
-            items: []
-        };
-        var items = this.loadSchema(me.entryName);
-        if (items && items.length > 0) {
-            for (var i = 0; i < items.length; i++) {
-                cfg.items.push(this.createField(items[i]));
             }
-        }
-        this.exConfig(cfg);
-        var form = Ext.create("Ext.form.Panel", cfg);
-        form.on("afterrender", this.onReady, this)
-        me.form = form;
-        return form;
+        })
     }
 
 });

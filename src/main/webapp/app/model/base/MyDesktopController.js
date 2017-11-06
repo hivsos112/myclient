@@ -8,7 +8,7 @@ Ext.define('MyApp.model.base.MyDesktopController', {
             async: false,
             method: 'POST',
             jsonData: {
-                "serviceId": "phis.common",  //服务ID，由后台服务域名server和服务名称sampleService组成
+                "serviceId": "chis.common",  //服务ID，由后台服务域名server和服务名称sampleService组成
                 "method": "loadSystemInfo",      //请求的方法
                 "body" : []
             }

@@ -11,7 +11,7 @@
         <s:property name="location" value="classpath:example.properties"/>
     </s:bean>
 
-    <applicationDomain name="phis" registryAddress="zookeeper://${zookeeper.server}"
+    <applicationDomain name="chis" registryAddress="zookeeper://${zookeeper.server}"
                        packagePrefix="com.bsoft"/>
 
     <connector url="tcp://${rpc.server}?codec=hessian">

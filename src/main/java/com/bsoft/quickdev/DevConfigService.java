@@ -31,7 +31,7 @@ public class DevConfigService {
 
     @RpcService
     public List<Map<String, Object>> getSchema(String schemaId) {
-        String sql = "select b.id,b.cd,b.name,b.type,b.fg_vir from c_sy_schema a,c_sy_schema_item b where a.id=b.sid and a.cd=:id";
+        String sql = "select b.id,b.cd,b.name,b.type,b.dic_id,b.width,b.length,b.fg_vir from c_sy_schema a,c_sy_schema_item b where a.id=b.sid and a.cd=:id";
         Map<String, Object> p = new HashMap<>();
         p.put("id", schemaId);
         return simpleDAO.queryData(sql, p);

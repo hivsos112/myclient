@@ -27,8 +27,9 @@ Ext.define('MyApp.view.base.SimpleForm', {
         for (var i = 0; i < fields.length; i++) {
             var p = fields[i];
             var f = Ext.apply({}, p);
-            if (p.dic) {
+            if (p.dic_id) {
                 f.xtype = 'combo'
+                f.store = this.getStore(p);
             }
             items.push(f);
         }
