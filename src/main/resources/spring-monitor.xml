@@ -7,9 +7,14 @@
         http://www.bsoft.com.cn/schema/ssdev
 		http://www.bsoft.com.cn/schema/ssdev/ssdev.xsd">
 
-
+    <ssdev:dao id="simpleDAO" class="com.bsoft.dao.SimpleDAO"/>
     <bean id="commonBean" class="com.bsoft.comm.CommonService">
     </bean>
-
+    <bean id="devConfigBean" class="com.bsoft.quickdev.DevConfigService">
+        <property name="simpleDAO" ref="simpleDAO"/>
+    </bean>
     <ssdev:service id="common" ref="commonBean"/>
+    <ssdev:service id="config" ref="devConfigBean" />
+
+
 </beans>

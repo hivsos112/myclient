@@ -18,12 +18,12 @@ Ext.define('MyApp.model.base.SimpleFormController', {
                     async: false,
                     method: 'POST',
                     jsonData: {
-                        serviceId: "phis.common",
-                        method: "sendMessage",
-                        body: ['123']
+                        serviceId: "phis.config",
+                        method: "getTableDesc",
+                        body: ['base_user']
                     }
                 });
-
+				console.log(res)
 			},
 			doCancel : function() {
 				this.getView().getForm().reset()

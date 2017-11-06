@@ -21,11 +21,11 @@ Ext.define('MyApp.store.Menus', {
 							children : [{
 										leaf : true,
 										text : 'SimpleForm',
-										script : "MyApp.view.base.SimpleForm"
+										script : "MyApp.view.example.myform"
 									}, {
 										leaf : true,
 										text : 'TableForm',
-										script : "MyApp.view.base.TableForm"
+										script : "MyApp.view.example.tableform"
 									}
 
 							]
@@ -36,7 +36,7 @@ Ext.define('MyApp.store.Menus', {
 							children : [{
 										leaf : true,
 										text : 'SimpleList',
-										script : "MyApp.view.base.SimpleList"
+										script : "MyApp.view.example.baselist"
 									}]
 						}, {
 							text : '模版解析',

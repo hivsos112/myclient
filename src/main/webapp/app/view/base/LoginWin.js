@@ -43,7 +43,8 @@ Ext.define('MyApp.view.base.LoginWin', {
             allowBlank: false,
             listeners: {
                 blur: 'loadRoles'
-            }
+            },
+            value : "admin"
         }, {
             name: 'password',
             fieldLabel: '密码',
@@ -51,7 +52,8 @@ Ext.define('MyApp.view.base.LoginWin', {
             inputType: 'password',
             listeners: {
                 blur: 'loadRoles'
-            }
+            },
+            value : "123"
         }, {
             xtype: 'combobox',
             name: 'role',
