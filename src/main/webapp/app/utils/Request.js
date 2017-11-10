@@ -32,7 +32,12 @@ Ext.define("MyApp.utils.Request", {
                         callback.call(scope || this, data);
                     },
                     failure: function (response, opts) {
-                        Ext.Msg.alert("错误", response);
+                        Ext.Msg.show({
+                            title: "错误信息",
+                            msg: response,
+                            buttons: Ext.MessageBox.OK,
+                            icon: Ext.Msg.ERROR
+                        });
                     }
                 });
             } else {
@@ -55,4 +60,4 @@ Ext.define("MyApp.utils.Request", {
         }
     }
 
-})
+});

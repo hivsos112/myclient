@@ -70,7 +70,7 @@ public class DAOProxyCreator {
 	
 	@SuppressWarnings("unchecked")
 	public static <E> DelegateDAO<E> createProxyDAOBean(String daoClass,ReadDAO<E> r,WriteDAO<E> w) throws Exception{
-		cpool.insertClassPath(new ClassClassPath(ctd.persistence.delegate.DAOProxyCreator.class));
+		cpool.insertClassPath(new ClassClassPath(DAOProxyCreator.class));
 		CtClass ct = cpool.get(daoClass);
 		
 		StringBuilder className = new StringBuilder(daoClass);

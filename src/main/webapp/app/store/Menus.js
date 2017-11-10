@@ -43,12 +43,12 @@ Ext.define('MyApp.store.Menus', {
                 script: "MyApp.view.example.editlist"
             }]
         }, {
-            text: '模版解析',
+            text: 'Schema配置',
             expanded: true,
             children: [{
                 leaf: true,
-                text: '模板一',
-                template: 'template_1'
+                text: '基础配置',
+                script : "MyApp.view.config.SchemaConfigModule"
             }]
         }]
     }

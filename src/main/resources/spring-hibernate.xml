@@ -33,6 +33,7 @@
 			<array>
 				<value>ctd.account.user</value>
 				<value>ctd.account.role</value>
+				<value>com.bsoft.entity</value>
 			</array>
 		</property>
 		<property name="hibernateProperties">

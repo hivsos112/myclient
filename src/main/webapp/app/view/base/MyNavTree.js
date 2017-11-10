@@ -17,6 +17,7 @@ Ext.define('MyApp.view.base.MyNavTree', {
                     var tab = this.mainTab[script];
                     if (!tab) {
                         var m = Ext.create(script);
+                        m.script = script
                         var tab = mainTab.add({
                             title: record.get("text"),
                             closable: true,

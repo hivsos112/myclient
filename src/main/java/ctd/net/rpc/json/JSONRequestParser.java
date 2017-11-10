@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import ctd.net.rpc.desc.support.MethodDesc;
 import ctd.net.rpc.desc.support.ParameterDesc;
 import ctd.net.rpc.desc.support.ServiceDesc;
+import ctd.net.rpc.json.JSONRequestBean;
 import ctd.net.rpc.util.ServiceAdapter;
 import ctd.spring.AppDomainContext;
 import ctd.util.json.support.JSONParseUtils;

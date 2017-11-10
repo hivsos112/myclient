@@ -1,6 +1,6 @@
 Ext.define('MyApp.view.example.myform', {
     extend: 'MyApp.view.base.BaseForm',
-    entryName: "cloud_demo",
+    entryName: "c_sy_schema",
     title : "基础表单",
     actions: [{name: "保存", cmd: "save"}],
     doSave : function () {

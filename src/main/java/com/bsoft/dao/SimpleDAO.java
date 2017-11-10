@@ -1,8 +1,10 @@
 package com.bsoft.dao;
 
+import com.bsoft.entity.SchemaNameDO;
 import ctd.persistence.support.hibernate.HibernateSupportDelegateDAO;
 import ctd.persistence.support.hibernate.template.AbstractHibernateStatelessResultAction;
 import ctd.persistence.support.hibernate.template.HibernateSessionTemplate;
+import ctd.persistence.support.hibernate.template.HibernateStatelessAction;
 import ctd.persistence.support.hibernate.template.HibernateStatelessResultAction;
 import org.hibernate.Query;
 import org.hibernate.StatelessSession;
@@ -14,7 +16,11 @@ import java.util.Map;
 /**
  * Created by yangl on 2017/11/2.
  */
-public class SimpleDAO extends HibernateSupportDelegateDAO<Map<String, Object>> {
+public class SimpleDAO extends HibernateSupportDelegateDAO<SchemaNameDO> {
+
+    public SimpleDAO() {
+        this.setKeyField("id");
+    }
 
     public long getTotalCount(final String sql, final Map<String, Object> params) {
         HibernateStatelessResultAction<Long> action = new AbstractHibernateStatelessResultAction<Long>() {
@@ -44,7 +50,7 @@ public class SimpleDAO extends HibernateSupportDelegateDAO<Map<String, Object>> 
                         sqlQuery.setParameter(key, params.get(key));
                     }
                 }
-                sqlQuery.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).uniqueResult();
+                setResult((Map<String, Object>) sqlQuery.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).uniqueResult());
             }
         };
         HibernateSessionTemplate.instance().execute(action);
@@ -66,6 +72,28 @@ public class SimpleDAO extends HibernateSupportDelegateDAO<Map<String, Object>> 
             }
         };
         HibernateSessionTemplate.instance().execute(action);
+        return action.getResult();
+    }
+
+    public int executeUpdate(final String createSql, final Map<String, Object> params) {
+        AbstractHibernateStatelessResultAction<Integer> action = new AbstractHibernateStatelessResultAction<Integer>() {
+            @Override
+            public void execute(StatelessSession ss) throws Exception {
+                int id = 0;
+                Query sqlQuery = ss.createSQLQuery(createSql);
+                if (params != null) {
+                    for (String key : params.keySet()) {
+                        sqlQuery.setParameter(key, params.get(key));
+                    }
+                }
+                int i = sqlQuery.executeUpdate();
+                if (i > 0 && createSql.trim().startsWith("insert")) {
+                    id = Integer.parseInt(ss.createSQLQuery("SELECT LAST_INSERT_ID()").uniqueResult().toString());
+                }
+                setResult(id);
+            }
+        };
+        HibernateSessionTemplate.instance().executeTrans(action);
         return action.getResult();
     }
 }

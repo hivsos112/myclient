@@ -3,14 +3,18 @@
  */
 
 Ext.define("MyApp.view.base.BaseModule", {
-    requires: ['MyApp.utils.Request'],
+    extend: "Ext.Component",
+    requires: ['MyApp.utils.Request', "MyApp.utils.Message"],
     loadSchema: function (entryName) {
-        var res = Request.post("chis.config", "getSchema", [entryName]);
-        if (res.code > 200) {
-            Ext.Msg.alert("错误", res.msg);
-            return [];
+        if (!this.items) {
+            var res = Request.post("chis.config", "getSchema", [entryName]);
+            if (res.code > 200) {
+                Msg.error(res.msg);
+                return [];
+            }
+            this.items = res.body;
         }
-        return res.body;
+        return this.items;
     },
     createButtons: function (actions) {
         var buttons = [];
@@ -26,7 +30,8 @@ Ext.define("MyApp.view.base.BaseModule", {
             }
         }
         return buttons;
-    },
+    }
+    ,
     doAction: function (item, e) {
         var cmd = item.cmd;
         cmd = cmd.charAt(0).toUpperCase() + cmd.substr(1);
@@ -35,5 +40,35 @@ Ext.define("MyApp.view.base.BaseModule", {
             action.apply(this, [item, e])
         }
     }
+    ,
+    getWin: function (autoCreate, exCfg) {
+        if (!this.win) {
+            var cfg = {
+                extend: 'Ext.window.Window',
+                height: 300,
+                width: 400,
+                title: '窗口',
+                layout: 'fit',
+                closable: true
+            };
+            Ext.apply(cfg, exCfg);
+            if (autoCreate) {
+                cfg.items = this.initPanel();
+            }
+            var win = Ext.create("Ext.window.Window", cfg);
+            win.on("beforehide", function () {
+                this.fireEvent("beforehide");
+            }, this)
+            win.on("beforeclose", function () {
+                this.fireEvent("beforeclose");
+            }, this)
+            win.on("beforeshow", function () {
+                this.fireEvent("winShow");
+            }, this)
+            this.win = win;
+        }
+        return this.win;
+    }
 
-});
+})
+;

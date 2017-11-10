@@ -8,20 +8,12 @@ Ext.define('MyApp.view.base.TableForm', {
             layout: {
                 type: 'table',
                 columns: me.colCount || 3,
-                tableAttrs: {
-                    border: 0,
-                    cellpadding: "2",
-                    cellspacing: "2",
-                    style: {
-                        width: '100%'
-                    }
-                }
             },
             defaults: {
-                labelWidth: me.labelWidth || 120,
+                labelWidth: me.labelWidth || 80,
                 xtype: 'textfield',
                 width: '100%',
-                minWidth: me.minWidth || 280
+                minWidth: me.minWidth || 180
             }
         })
     }
