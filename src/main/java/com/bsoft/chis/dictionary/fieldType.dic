@@ -1,0 +1,8 @@
+<dic name="字段类型">
+    <item key="string" text="string"/>
+    <item key="int" text="int"/>
+    <item key="double" text="double"/>
+    <item key="date" text="date"/>
+    <item key="datetime" text="datetime"/>
+    <item key="boolean" text="boolean"/>
+</dic>

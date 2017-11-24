@@ -102,6 +102,24 @@ public class DevConfigService {
         return sb.length() > 0 ? sb.substring(0, sb.length() - 1) : "";
     }
 
+    private int updateData(String schemaName,Map<String,Object> data) {
+        List<Map<String, Object>> l = getSchema(schemaName);
+        StringBuilder createSql = new StringBuilder("update ").append(schemaName).append(" set ");
+        List<String> fields = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        String condion = null;
+        for (int i = 0; i < l.size(); i++) {
+            Map<String,Object> item = l.get(i);
+            if ("Y".equals(item.get("fg_vir"))) {
+                continue;
+            }
+            if("Y".equals(item.get("fg_key"))) {
+
+            }
+        }
+        return 0;
+    }
+
     private int saveData(String schemaName, Map<String, Object> data) {
         List<Map<String, Object>> l = getSchema(schemaName);
         StringBuilder createSql = new StringBuilder("insert into ").append(schemaName).append("(");
@@ -144,6 +162,15 @@ public class DevConfigService {
         Map<String, Object> res = new HashMap<>();
         // 保存schema结构信息
         int keyValue = saveData("c_sy_schema", data);
+        res.put("keyValue", keyValue);
+        return res;
+    }
+
+    @RpcService
+    public Map<String, Object> saveSchemaItem(Map<String, Object> data) {
+        Map<String, Object> res = new HashMap<>();
+        // 保存schemaItem结构信息
+        int keyValue = saveData("c_sy_schema_item", data);
         res.put("keyValue", keyValue);
         return res;
     }

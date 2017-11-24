@@ -23,12 +23,7 @@ Ext.define('MyApp.view.base.BaseForm', {
         };
         var items = this.loadSchema(me.entryName);
         if (items && items.length > 0) {
-            for (var i = 0; i < items.length; i++) {
-                if (items[i].fg_hid === "Y") {
-                    continue
-                }
-                cfg.items.push(this.createField(items[i]));
-            }
+            cfg.items = this.createItems(items);
         }
         // 按钮
         if (this.actions && this.actions.length > 0) {
@@ -74,9 +69,13 @@ Ext.define('MyApp.view.base.BaseForm', {
             var f = this.form.getForm().findField(item.cd);
             if (f) {
                 if (data && data[item.cd]) {
-                    f.setValue(data[item.cd]);
+                    if (item.type === 'boolean') {
+                        f.setValue(data[item.cd] === 'Y');
+                    } else {
+                        f.setValue(data[item.cd]);
+                    }
                 } else {
-                    f.setValue(item.defaultValue)
+                    f.setValue(item.defaultValue);
                 }
             }
         }
@@ -101,6 +100,9 @@ Ext.define('MyApp.view.base.BaseForm', {
         if ((this.saveServiceId || this.serviceId) && this.saveMethod) {
             if (this.form.getForm().isValid()) {
                 var data = this.getServerData(this.form.getForm().getValues());
+                if (this.initDataId) {
+                    data[this.pkey] = this.initDataId;
+                }
                 this.form.mask("正在保存数据...");
                 Request.post((this.saveServiceId || this.serviceId), this.saveMethod, [data], function (json) {
                     this.form.unmask();
@@ -119,69 +121,83 @@ Ext.define('MyApp.view.base.BaseForm', {
             this.win.hide();
         }
     },
-    createField: function (item) {
-        var f = {
-            name: item.cd,
-            fieldLabel: item.name,
-            allowBlank: item.fg_nul === "Y"
-        };
-        if (item.fg_nul !== "Y") {
-            f.allowBlank = false;
-            f.labelStyle = "color:red;"
-        }
-        // 字典类型
-        if (item.dic_id) {
-            var url = item.dic_id + ".dic";
-            var reader = Ext.create("Ext.data.reader.Json", {
-                rootProperty: 'items'
-            });
-            var model = Ext.create("Ext.data.Model", {
-                fields: ['key', 'text']
-            });
-            var store = Ext.create("Ext.data.Store", {
-                model: model,
-                pageSize: this.pageSize || 50,
-                proxy: {
-                    type: 'ajax',
-                    url: url,
-                    reader: reader
-                }
-            });
-            Ext.apply(f, {
-                displayField: "text",
-                valueField: "key",
-                // queryMode: 'local',
-                typeAhead: true,
-                autoLoadOnValue: true,
-                store: store
-            })
-            return Ext.create("Ext.form.field.ComboBox", f);
-        }
-
-        var xtype = "textfield";
-        switch (item.type) {
-            case "int":
-            case "number":
-            case "long":
-                xtype = "numberfield";
-                break;
-            case "double":
-            case "float":
-                xtype = "numberfield";
-                break;
-            case "dete":
-                xtype = "datefield";
-                break;
-            case "time":
-            case "datetime":
-                xtype = "timefield";
-                break;
-            case "boolean": {
+    createItems: function (items) {
+        var fields = [];
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (item.fg_key === "Y") {
+                this.pkey = item.cd; // 主键字段
             }
-                xtype = "checkboxfield";
+            if (item.fg_hid === "Y") {
+                continue
+            }
+            var f = {
+                name: item.cd,
+                fieldLabel: item.name,
+                allowBlank: item.fg_nul === "Y"
+            };
+            if (item.fg_nul !== "Y") {
+                f.allowBlank = false;
+                f.labelStyle = "color:red;"
+            }
+
+            // 字典类型
+            if (item.dic_id) {
+                var url = item.dic_id + ".dic";
+                var reader = Ext.create("Ext.data.reader.Json", {
+                    rootProperty: 'items'
+                });
+                var model = Ext.create("Ext.data.Model", {
+                    fields: ['key', 'text']
+                });
+                var store = Ext.create("Ext.data.Store", {
+                    model: model,
+                    pageSize: this.pageSize || 50,
+                    proxy: {
+                        type: 'ajax',
+                        url: url,
+                        reader: reader
+                    }
+                });
+                Ext.apply(f, {
+                    displayField: "text",
+                    valueField: "key",
+                    // queryMode: 'local',
+                    typeAhead: true,
+                    autoLoadOnValue: true,
+                    store: store
+                });
+                fields.push(Ext.create("Ext.form.field.ComboBox", f));
+                continue;
+            }
+            var xtype = "textfield";
+            switch (item.type) {
+                case "int":
+                case "number":
+                case "long":
+                    xtype = "numberfield";
+                    break;
+                case "double":
+                case "float":
+                    xtype = "numberfield";
+                    break;
+                case "dete":
+                    xtype = "datefield";
+                    break;
+                case "time":
+                case "datetime":
+                    xtype = "timefield";
+                    break;
+                case "boolean":
+                    xtype = "checkboxfield";
+                    break;
+                default :
+                    xtype = "textfield";
+            }
+            f.xtype = xtype;
+            Ext.apply(f, item.exCfg);
+            fields.push(f);
         }
-        f.xtype = xtype;
-        Ext.apply(f, item.exCfg);
-        return f;
+        return fields;
     }
 });
