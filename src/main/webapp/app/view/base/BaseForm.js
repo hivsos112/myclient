@@ -93,6 +93,11 @@ Ext.define('MyApp.view.base.BaseForm', {
             }, this)
         }
     },
+    /**
+     * 扩展参数用
+     * @param data
+     * @returns {*}
+     */
     getServerData: function (data) {
         return data
     },
@@ -100,14 +105,19 @@ Ext.define('MyApp.view.base.BaseForm', {
         if ((this.saveServiceId || this.serviceId) && this.saveMethod) {
             if (this.form.getForm().isValid()) {
                 var data = this.getServerData(this.form.getForm().getValues());
+                var op = "create";
                 if (this.initDataId) {
                     data[this.pkey] = this.initDataId;
+                    op = "update";
                 }
                 this.form.mask("正在保存数据...");
-                Request.post((this.saveServiceId || this.serviceId), this.saveMethod, [data], function (json) {
+                Request.post((this.saveServiceId || this.serviceId), this.saveMethod, [op, data], function (json) {
                     this.form.unmask();
                     if (json.code === 200) {
                         Msg.tip("保存成功");
+                        if (!this.initDataId) {
+                            this.initDataId = json.body.keyValue;
+                        }
                         this.fireEvent("save");
                     } else {
                         Msg.error(json.msg);
@@ -118,7 +128,7 @@ Ext.define('MyApp.view.base.BaseForm', {
     },
     doClose: function () {
         if (this.win) {
-            this.win.hide();
+            this.win.close();
         }
     },
     createItems: function (items) {

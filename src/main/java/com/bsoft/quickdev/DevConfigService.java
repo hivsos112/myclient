@@ -28,10 +28,13 @@ public class DevConfigService {
      * @return
      */
     @RpcService
-    public List<Map<String, Object>> getTableDesc(String tableName) {
+    public Map<String, Object> getTableDesc(Map<String, Object> body) {
+        String tableName = S.toString(body.get("tableName"));
+        Map<String, Object> resp = new HashMap<>(16);
         // 根据不同数据库，获取表结构信息
         List<Map<String, Object>> l = simpleDAO.queryData("show full COLUMNS from " + tableName, null);
-        return l;
+        resp.put("data", l);
+        return resp;
     }
 
     @RpcService
@@ -102,22 +105,34 @@ public class DevConfigService {
         return sb.length() > 0 ? sb.substring(0, sb.length() - 1) : "";
     }
 
-    private int updateData(String schemaName,Map<String,Object> data) {
+    private int updateData(String schemaName, Map<String, Object> data) {
         List<Map<String, Object>> l = getSchema(schemaName);
-        StringBuilder createSql = new StringBuilder("update ").append(schemaName).append(" set ");
+        StringBuilder updateSql = new StringBuilder("update ").append(schemaName).append(" set ");
         List<String> fields = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
-        String condion = null;
+        String condition = null;
         for (int i = 0; i < l.size(); i++) {
-            Map<String,Object> item = l.get(i);
-            if ("Y".equals(item.get("fg_vir"))) {
+            Map<String, Object> item = l.get(i);
+            if ("Y".equals(S.toString(item.get("fg_vir")))) {
                 continue;
             }
-            if("Y".equals(item.get("fg_key"))) {
-
+            String cd = S.toString(item.get("cd"));
+            if ("Y".equals(S.toString(item.get("fg_key")))) {
+                condition = cd + "=:" + cd;
+                params.put(cd, data.get(cd));
+                continue;
+            }
+            if (data.containsKey(cd)) {
+                if (fields.size() > 0) {
+                    updateSql.append(",");
+                }
+                fields.add(cd);
+                params.put(cd, data.get(cd));
+                updateSql.append(cd).append("=:").append(cd);
             }
         }
-        return 0;
+        updateSql.append(" where ").append(condition);
+        return simpleDAO.executeUpdate(updateSql.toString(), params);
     }
 
     private int saveData(String schemaName, Map<String, Object> data) {
@@ -158,20 +173,30 @@ public class DevConfigService {
      * @return
      */
     @RpcService
-    public Map<String, Object> saveSchemaName(Map<String, Object> data) {
+    public Map<String, Object> saveSchemaName(String op, Map<String, Object> data) {
         Map<String, Object> res = new HashMap<>();
         // 保存schema结构信息
-        int keyValue = saveData("c_sy_schema", data);
-        res.put("keyValue", keyValue);
+        if ("create".equals(op)) {
+            int keyValue = saveData("c_sy_schema", data);
+            res.put("keyValue", keyValue);
+        } else {
+            int n = updateData("c_sy_schema", data);
+            res.put("count", n);
+        }
         return res;
     }
 
     @RpcService
-    public Map<String, Object> saveSchemaItem(Map<String, Object> data) {
+    public Map<String, Object> saveSchemaItem(String op, Map<String, Object> data) {
         Map<String, Object> res = new HashMap<>();
         // 保存schemaItem结构信息
-        int keyValue = saveData("c_sy_schema_item", data);
-        res.put("keyValue", keyValue);
+        if ("create".equals(op)) {
+            int keyValue = saveData("c_sy_schema_item", data);
+            res.put("keyValue", keyValue);
+        } else {
+            int n = updateData("c_sy_schema_item", data);
+            res.put("count", n);
+        }
         return res;
     }
 
@@ -185,7 +210,7 @@ public class DevConfigService {
         String deleteSql = "delete from c_sy_schema where id=:id";
         Map<String, Object> p = new HashMap<>();
         p.put("id", value);
-        simpleDAO.executeUpdate(deleteSql.toString(), p);
+        simpleDAO.executeUpdate(deleteSql, p);
     }
 
 

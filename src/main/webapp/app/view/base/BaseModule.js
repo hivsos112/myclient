@@ -4,6 +4,10 @@
 
 Ext.define("MyApp.view.base.BaseModule", {
     extend: "Ext.Component",
+    /**
+     * 外部模块传递变量
+     */
+    _var : {},
     requires: ['MyApp.utils.Request', "MyApp.utils.Message"],
     loadSchema: function (entryName) {
         if (!this.items) {
@@ -49,6 +53,7 @@ Ext.define("MyApp.view.base.BaseModule", {
                 width: 400,
                 title: '窗口',
                 layout: 'fit',
+                closeAction : this.closeAction || 'hide',
                 closable: true
             };
             Ext.apply(cfg, exCfg);

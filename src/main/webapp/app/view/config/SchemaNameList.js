@@ -56,7 +56,19 @@ Ext.define('MyApp.view.config.SchemaNameList', {
             Msg.tip("请先选择需要查看的记录!");
             return;
         }
-
+        if(!this.descListWin) {
+            this.descList = Ext.create("MyApp.view.config.TableDescList");
+            this.descList.on("winShow",function(){
+                this.loadData();
+            },this.descList)
+            var win = this.descList.getWin(true);
+            win.setTitle("表字段 - " + r.get("name"));
+            win.setWeight(800);
+            win.setHeight(600);
+            this.descListWin = win;
+        }
+        this.descList.params.tableName = r.get("table_name") || r.get("cd");
+        this.descListWin.show();
     },
     onRowClick: function (grid, record, tr, rowIndex) {
         var id = record.get("id");

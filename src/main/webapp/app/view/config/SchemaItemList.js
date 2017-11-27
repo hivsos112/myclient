@@ -13,7 +13,7 @@ Ext.define('MyApp.view.config.SchemaItemList', {
     enablePaging: true,
     getForm: function () {
         if (!this.form) {
-            var form = Ext.create("MyApp.view.base.BaseForm", {
+            var form = Ext.create("MyApp.view.config.SchemaItemForm", {
                 entryName: this.entryName,
                 serviceId: "chis.config",
                 saveMethod: "saveSchemaItem",
@@ -33,7 +33,8 @@ Ext.define('MyApp.view.config.SchemaItemList', {
     doCreate: function () {
         var form = this.getForm();
         form.doNew();
-        var win = form.getWin(true, {title: "新建-" + this.title});
+        var win = form.getWin(true);
+        win.setTitle("新建-" + this.title);
         win.show();
     },
     doUpdate: function () {
@@ -44,7 +45,8 @@ Ext.define('MyApp.view.config.SchemaItemList', {
         }
         var form = this.getForm();
         form.initDataId = r.get("id");
-        var win = form.getWin(true, {title: "修改-" + this.title});
+        var win = form.getWin(true);
+        win.setTitle("修改-" + this.title);
         win.show();
     },
     doRemove: function () {

@@ -45,6 +45,7 @@ Ext.define("MyApp.view.config.SchemaConfigModule", {
         return itemList.initPanel();
     },
     showItems: function (id) {
+        this.itemList._var.sid = id;
         this.itemList.setParams("sid=:sid", {sid: id});
         this.itemList.loadData();
     }
