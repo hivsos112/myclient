@@ -50,6 +50,7 @@ Ext.define('MyApp.view.base.BaseList', {
             multiSelect: me.multiSelect || false,
             scrollable: true,
             headerBorders: false,
+            columnLines: true,
             scroll: true,
             columns: [],
             viewConfig: {
@@ -164,25 +165,12 @@ Ext.define('MyApp.view.base.BaseList', {
                 sortable: false,
                 dataIndex: item.cd
             };
-            if (item.fg_hid === "Y") {
+            if (item.fg_hid) {
                 continue;
             }
             if (item.type === "boolean") {
                 f.xtype = "checkcolumn";
                 f.disabled = true;
-                // 查找更优方式
-                f.defaultRenderer = function (value, cellValues) {
-                    var cssPrefix = Ext.baseCSSPrefix,
-                        cls = cssPrefix + 'grid-checkcolumn';
-
-                    if (this.disabled) {
-                        cellValues.tdCls += ' ' + this.disabledCls;
-                    }
-                    if (value === "Y") {
-                        cls += ' ' + cssPrefix + 'grid-checkcolumn-checked';
-                    }
-                    return '<div class="' + cls + '" role="button" tabIndex="0"></div>';
-                }
             }
             item.width ? f.width = item.width : f.flex = 1;
             Ext.apply(f, item.exCfg);
@@ -203,7 +191,7 @@ Ext.define('MyApp.view.base.BaseList', {
             if (type && type !== "string") {
                 c.type = this.getModelType(type);
             }
-            if (item.fg_key === "Y") {
+            if (item.fg_key) {
                 cfg.pkey = item.cd;
             }
             cfg.fields.push(c);

@@ -12,10 +12,6 @@ Ext.define("MyApp.view.config.SchemaConfigModule", {
                 pack: 'start',
                 align: 'stretch'
             },
-            frame: false,
-            defaults: {
-                frame: false
-            },
             items: [
                 {
                     flex: 1,

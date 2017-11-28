@@ -15,6 +15,7 @@ Ext.define('MyApp.view.base.BaseForm', {
             title: me.title,
             defaultType: 'textfield',
             bodyPadding: 10,
+            autoScroll : true,
             defaults: {
                 labelWidth: me.labelWidth || 120,
                 anchor: '100%'
@@ -70,7 +71,7 @@ Ext.define('MyApp.view.base.BaseForm', {
             if (f) {
                 if (data && data[item.cd]) {
                     if (item.type === 'boolean') {
-                        f.setValue(data[item.cd] === 'Y');
+                        f.setValue(data[item.cd]);
                     } else {
                         f.setValue(data[item.cd]);
                     }
@@ -135,19 +136,18 @@ Ext.define('MyApp.view.base.BaseForm', {
         var fields = [];
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
-            if (item.fg_key === "Y") {
+            if (item.fg_key) {
                 this.pkey = item.cd; // 主键字段
             }
-            if (item.fg_hid === "Y") {
+            if (item.fg_hid) {
                 continue
             }
             var f = {
                 name: item.cd,
                 fieldLabel: item.name,
-                allowBlank: item.fg_nul === "Y"
+                allowBlank: item.fg_nul
             };
-            if (item.fg_nul !== "Y") {
-                f.allowBlank = false;
+            if (!item.fg_nul) {
                 f.labelStyle = "color:red;"
             }
 
@@ -200,6 +200,7 @@ Ext.define('MyApp.view.base.BaseForm', {
                     break;
                 case "boolean":
                     xtype = "checkboxfield";
+                    f.inputValue = 1;
                     break;
                 default :
                     xtype = "textfield";

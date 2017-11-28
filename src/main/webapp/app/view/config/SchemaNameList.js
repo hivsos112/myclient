@@ -63,7 +63,7 @@ Ext.define('MyApp.view.config.SchemaNameList', {
             },this.descList)
             var win = this.descList.getWin(true);
             win.setTitle("表字段 - " + r.get("name"));
-            win.setWeight(800);
+            win.setWidth(1024);
             win.setHeight(600);
             this.descListWin = win;
         }

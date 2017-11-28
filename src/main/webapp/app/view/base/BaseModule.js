@@ -53,6 +53,7 @@ Ext.define("MyApp.view.base.BaseModule", {
                 width: 400,
                 title: '窗口',
                 layout: 'fit',
+                shadow : true,
                 closeAction : this.closeAction || 'hide',
                 closable: true
             };
