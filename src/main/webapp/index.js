@@ -1,8 +1,9 @@
-$styleSheet("ext.classic.theme-triton.resources.theme-triton-all")
-
+$styleSheet("ext.classic.theme-triton.resources.theme-triton-all");
 $import("app.utils.md5");
-$import("ext.build.ext-all-debug")
-$import("ext.local.locale-zh_CN")
+$import("ext.build.ext-all-debug");
+$import("ext.local.locale-zh_CN");
+
+$import("ext.classic.theme-triton.theme-triton");
 
 Ext.onReady(function(){
     Ext.Context = {};
