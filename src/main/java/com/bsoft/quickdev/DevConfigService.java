@@ -113,11 +113,11 @@ public class DevConfigService {
         String condition = null;
         for (int i = 0; i < l.size(); i++) {
             Map<String, Object> item = l.get(i);
-            if ("Y".equals(S.toString(item.get("fg_vir")))) {
+            if ((boolean)item.get("fg_vir")) {
                 continue;
             }
             String cd = S.toString(item.get("cd"));
-            if ("Y".equals(S.toString(item.get("fg_key")))) {
+            if ((boolean)item.get("fg_key")) {
                 condition = cd + "=:" + cd;
                 params.put(cd, data.get(cd));
                 continue;
@@ -141,7 +141,7 @@ public class DevConfigService {
         List<String> fields = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         for (int i = 0; i < l.size(); i++) {
-            if ("Y".equals(l.get(i).get("fg_vir"))) {
+            if ((boolean)l.get(i).get("fg_vir")) {
                 continue;
             }
             String cd = S.toString(l.get(i).get("cd"));
