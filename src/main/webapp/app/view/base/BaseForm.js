@@ -186,7 +186,7 @@ Ext.define('MyApp.view.base.BaseForm', {
                 case "float":
                     xtype = "numberfield";
                     break;
-                case "dete":
+                case "date":
                     xtype = "datefield";
                     break;
                 case "time":

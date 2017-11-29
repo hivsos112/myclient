@@ -27,9 +27,10 @@ Ext.define('MyApp.view.base.BaseList', {
     initParams: function () {
         return {};
     },
-    setParams: function (cnd, data) {
+    setParams: function (cnd, data, sort) {
         this.params.cnd = cnd;
         this.params.cndData = data;
+        this.params.sort = sort
     },
     initPanel: function () {
         var me = this;

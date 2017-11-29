@@ -7,10 +7,18 @@ Ext.define('MyApp.view.config.SchemaItemList', {
     method: "getTableData",
     entryName: "c_sy_schema_item",
     title: "Schema字段",
-    autoLoadData : false,
+    autoLoadData: false,
     actions: [{name: "新建", cmd: "create"}, {name: "修改", cmd: "update"},
-        {name: "↑", cmd: "up"}, {name: "↓", cmd: "down"}],
+        {name: "保存当前排序", cmd: "saveSort"}],
     enablePaging: true,
+    exConfig: function (cfg) {
+        Ext.apply(cfg.viewConfig, {
+            plugins: {
+                ptype: "gridviewdragdrop",
+                dragText: "用鼠标拖拽进行上下排序"
+            }
+        });
+    },
     getForm: function () {
         if (!this.form) {
             var form = Ext.create("MyApp.view.config.SchemaItemForm", {
@@ -51,6 +59,24 @@ Ext.define('MyApp.view.config.SchemaItemList', {
     },
     doRemove: function () {
         this.remove("id", "name");
+    },
+    doSaveSort: function () {
+        var sortData = [];
+        for (var i = 0; i < this.store.getCount(); i++) {
+            var r = this.store.getAt(i);
+            sortData.push({
+                id: r.get("id"),
+                sort: i + 1 // 从1开始
+            })
+        }
+        Request.post(this.serviceId, "saveItemSort", [sortData], function (json) {
+            if (json.code == 200) {
+                Msg.tip("保存成功");
+                this.loadData();
+            } else {
+                Msg.error(json.msg);
+            }
+        }, this)
     },
     doQueryFiled: function () {
         var r = this.getSelectedRecord();

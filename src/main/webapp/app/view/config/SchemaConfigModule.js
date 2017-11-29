@@ -42,7 +42,7 @@ Ext.define("MyApp.view.config.SchemaConfigModule", {
     },
     showItems: function (id) {
         this.itemList._var.sid = id;
-        this.itemList.setParams("sid=:sid", {sid: id});
+        this.itemList.setParams("sid=:sid", {sid: id},"sort");
         this.itemList.loadData();
     }
 

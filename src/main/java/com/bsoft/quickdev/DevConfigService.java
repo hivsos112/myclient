@@ -19,6 +19,7 @@ public class DevConfigService {
 
     private static final String PageSize = "pageSize";
     private static final String CND = "cnd";
+    private static final String SORT = "sort";
 
     /**
      * 获取表字段信息
@@ -37,7 +38,7 @@ public class DevConfigService {
 
     @RpcService
     public List<Map<String, Object>> getSchema(String schemaId) {
-        String sql = "select b.id,b.cd,b.name,b.type,b.dic_id,b.width,b.length,b.fg_vir,b.fg_nul,b.fg_hid,fg_key from c_sy_schema a,c_sy_schema_item b where a.id=b.sid and a.cd=:id";
+        String sql = "select b.id,b.cd,b.name,b.type,b.dic_id,b.width,b.length,b.fg_vir,b.fg_nul,b.fg_hid,fg_key from c_sy_schema a,c_sy_schema_item b where a.id=b.sid and a.cd=:id order by b.sort";
         Map<String, Object> p = new HashMap<>(16);
         p.put("id", schemaId);
         return simpleDAO.queryData(sql, p);
@@ -75,6 +76,9 @@ public class DevConfigService {
             if (cndData != null && cndData instanceof Map) {
                 p.putAll((Map<String, Object>) cndData);
             }
+        }
+        if (body.containsKey(SORT)) {
+            sql.append(" order by ").append(body.get(SORT));
         }
         if (body.containsKey(PageSize)) {
             totalCount = simpleDAO.getTotalCount(sql.toString(), p);
@@ -209,6 +213,14 @@ public class DevConfigService {
         for (Map fd : fields) {
             if (set.contains(S.toString(fd.get("cd")))) continue;
             saveData("c_sy_schema_item", fd);
+        }
+    }
+
+    @RpcService
+    public void saveItemSort(List<Map<String, Object>> sortInfo) {
+        // 已经存在的不保存
+        for (Map m : sortInfo) {
+            updateData("c_sy_schema_item", m);
         }
     }
 
