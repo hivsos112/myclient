@@ -56,22 +56,30 @@ Ext.define('MyApp.view.config.SchemaNameList', {
             Msg.tip("请先选择需要查看的记录!");
             return;
         }
-        if(!this.descListWin) {
+        if (!this.descListWin) {
             this.descList = Ext.create("MyApp.view.config.TableDescList");
-            this.descList.on("winShow",function(){
-                this.loadData();
-            },this.descList)
+            this.descList.on("winShow", function () {
+                this.descList.loadData();
+            }, this)
+            this.descList.on("saveSuccess", function () {
+                this.descList.doClose();
+                this.loadItems(this.getSelectedRecord());
+            }, this);
             var win = this.descList.getWin(true);
             win.setTitle("表字段 - " + r.get("name"));
             win.setWidth(1024);
             win.setHeight(600);
             this.descListWin = win;
         }
+        this.descList._var.item_sid = r.get("id");
+        this.descList._var.schemaId = r.get("cd");
         this.descList.params.tableName = r.get("table_name") || r.get("cd");
         this.descListWin.show();
     },
-    onRowClick: function (grid, record, tr, rowIndex) {
-        var id = record.get("id");
-        this.fireEvent("showItem", id);
+    onRowSelect: function (grid, record) {
+        this.loadItems(record);
+    },
+    loadItems: function (r) {
+        this.fireEvent("showItem", r.get("id"));
     }
 });

@@ -7,7 +7,7 @@ Ext.define("MyApp.view.base.BaseModule", {
     /**
      * 外部模块传递变量
      */
-    _var : {},
+    _var: {},
     requires: ['MyApp.utils.Request', "MyApp.utils.Message"],
     loadSchema: function (entryName) {
         if (!this.items) {
@@ -43,6 +43,11 @@ Ext.define("MyApp.view.base.BaseModule", {
         if (action) {
             action.apply(this, [item, e])
         }
+    },
+    doClose: function () {
+        if (this.win) {
+            this.win.close();
+        }
     }
     ,
     getWin: function (autoCreate, exCfg) {
@@ -53,8 +58,8 @@ Ext.define("MyApp.view.base.BaseModule", {
                 width: 400,
                 title: '窗口',
                 layout: 'fit',
-                shadow : true,
-                closeAction : this.closeAction || 'hide',
+                shadow: true,
+                closeAction: this.closeAction || 'hide',
                 closable: true
             };
             Ext.apply(cfg, exCfg);

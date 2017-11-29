@@ -10,6 +10,8 @@ Ext.define('MyApp.view.base.BaseList', {
     enablePaging: true,
     /** 默认加载 */
     autoLoadData: true,
+    /** 默认选中第一条记录 */
+    selectFirst: true,
     /** 允许列表单元格文本选中*/
     enableTextSelection: false,
     /** * 按钮配置 如[{name: "新建", cmd: "create"}, {name: "查看", cmd: "read"}]*/
@@ -63,6 +65,7 @@ Ext.define('MyApp.view.base.BaseList', {
         // store
         this.store = this.getStore(items);
         this.store.on("beforeload", this.onStoreBeforeLoad, this);
+        this.store.on("load", this.onLoadData, this);
         cfg.store = this.store;
         if (this.enablePaging) { // 分页
             cfg.bbar = Ext.create('Ext.PagingToolbar', {
@@ -78,7 +81,7 @@ Ext.define('MyApp.view.base.BaseList', {
         this.exConfig(cfg);
         var grid = Ext.create("Ext.grid.Panel", cfg);
         grid.on("afterrender", this.onReady, this);
-        grid.on("rowclick", this.onRowClick, this);
+        grid.on("select", this.onRowSelect, this);
         grid.on("rowdblclick", this.onRowDblClick, this);
         me.grid = grid;
         return grid;
@@ -96,7 +99,7 @@ Ext.define('MyApp.view.base.BaseList', {
         }
     },
     /** 单击列调用,继承实现 入参: grid, record, tr, rowIndex */
-    onRowClick: Ext.emptyFn,
+    onRowSelect: Ext.emptyFn,
     /** 双击列调用*/
     onRowDblClick: function (grid, record, tr, rowIndex) {
         if (this.doRead) {
@@ -111,6 +114,18 @@ Ext.define('MyApp.view.base.BaseList', {
             this.params.pageSize = opt.config.limit;
         }
         Ext.apply(store.proxy.extraParams, this.requestData);
+    },
+    onLoadData: function (store, records) {
+        if (this.selectFirst && records.length > 0) {
+            this.selectRow(0);
+        }
+    },
+    /**
+     * list选中row行
+     * @param row: record or index
+     */
+    selectRow: function (row) {
+        this.grid.getSelectionModel().select(row);
     },
     loadData: function () {
         if (this.store) {
@@ -128,7 +143,6 @@ Ext.define('MyApp.view.base.BaseList', {
                 this.processRemove(r.get(keyField))
             }
         }, this);
-
     },
     processRemove: function (value) {
         Request.post((this.removeServiceId || this.serviceId), this.removeMethod,

@@ -8,5 +8,31 @@ Ext.define('MyApp.view.base.CheckList', {
         cfg.selModel = {
             selType: 'checkboxmodel'
         }
+    },
+    /**
+     * 返回Model对象数组
+     * @returns {*|Ext.data.Model[]}
+     */
+    getSelect: function () {
+        return this.grid.getSelectionModel().getSelection();
+    },
+    /**
+     * 返回普通对象数组
+     * @returns {Array}
+     */
+    getSelectData : function () {
+        var records = this.getSelect();
+        return records.map(function (rd) {
+            return rd.data;
+        })
+    },
+    selectAll : function() {
+
+    },
+    deselectAll : function () {
+
+    },
+    selectRow : function (row) {
+
     }
 });

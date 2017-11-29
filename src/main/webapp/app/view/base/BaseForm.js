@@ -127,11 +127,6 @@ Ext.define('MyApp.view.base.BaseForm', {
             }
         }
     },
-    doClose: function () {
-        if (this.win) {
-            this.win.close();
-        }
-    },
     createItems: function (items) {
         var fields = [];
         for (var i = 0; i < items.length; i++) {
