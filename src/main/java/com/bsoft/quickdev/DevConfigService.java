@@ -1,9 +1,7 @@
 package com.bsoft.quickdev;
 
-import com.bsoft.entity.SchemaNameDO;
-import com.bsoft.utils.S;
 import com.bsoft.dao.SimpleDAO;
-import ctd.util.JSONUtils;
+import com.bsoft.utils.S;
 import ctd.util.annotation.RpcService;
 
 import java.util.*;
@@ -48,7 +46,7 @@ public class DevConfigService {
 
     @RpcService
     public List<Map<String, Object>> getSchemaName(String schemaId) {
-        String sql = "select a.id,a.cd,a.name,a.table_name from c_sy_schema a,c_sy_schema_item b where a.id=b.sid and a.cd=:id";
+        String sql = "select a.id,a.cd,a.name,a.table_name from c_sy_schema a where a.cd=:id";
         Map<String, Object> p = new HashMap<>(16);
         p.put("id", schemaId);
         return simpleDAO.queryData(sql, p);
@@ -113,11 +111,11 @@ public class DevConfigService {
         String condition = null;
         for (int i = 0; i < l.size(); i++) {
             Map<String, Object> item = l.get(i);
-            if ((boolean)item.get("fg_vir")) {
+            if ((boolean) item.get("fg_vir")) {
                 continue;
             }
             String cd = S.toString(item.get("cd"));
-            if ((boolean)item.get("fg_key")) {
+            if ((boolean) item.get("fg_key")) {
                 condition = cd + "=:" + cd;
                 params.put(cd, data.get(cd));
                 continue;
@@ -141,7 +139,7 @@ public class DevConfigService {
         List<String> fields = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         for (int i = 0; i < l.size(); i++) {
-            if ((boolean)l.get(i).get("fg_vir")) {
+            if ((boolean) l.get(i).get("fg_vir")) {
                 continue;
             }
             String cd = S.toString(l.get(i).get("cd"));
@@ -199,6 +197,21 @@ public class DevConfigService {
         }
         return res;
     }
+
+    @RpcService
+    public void saveAsItems(String schemaId, List<Map<String, Object>> fields) {
+        // 已经存在的不保存
+        List<Map<String, Object>> l = getSchema(schemaId);
+        Set<String> set = new HashSet<>();
+        for (Map m : l) {
+            set.add(S.toString(m.get("cd")));
+        }
+        for (Map fd : fields) {
+            if (set.contains(S.toString(fd.get("cd")))) continue;
+            saveData("c_sy_schema_item", fd);
+        }
+    }
+
 
     /**
      * 删除schema信息
