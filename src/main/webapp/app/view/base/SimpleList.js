@@ -1,3 +1,6 @@
+/**
+ * 基础list列表(测试用demo)
+ */
 Ext.define("MyApp.view.base.SimpleList", {
 	extend : 'Ext.grid.Panel',
 	requires : ['MyApp.store.Companies', 'Ext.grid.column.Action'],

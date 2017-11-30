@@ -1,5 +1,5 @@
 /**
- * 基础form表单
+ * 基础form表单(测试用demo)
  */
 Ext.define('MyApp.view.base.SimpleForm', {
     extend: 'Ext.form.Panel',
