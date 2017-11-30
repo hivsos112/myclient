@@ -9,7 +9,7 @@ Ext.define('MyApp.view.config.SchemaNameList', {
     entryName: "c_sy_schema",
     title: "Schema名称",
     actions: [{name: "新建", cmd: "create"}, {name: "修改", cmd: "update"},
-        {name: "删除", cmd: "remove"}, {name: "查看字段", cmd: "queryFiled"}],
+        {name: "删除", cmd: "remove"}, {name: "查看字段", cmd: "queryFiled"}, {name: "重载Schema", cmd: "reloadSchema"}],
     enablePaging: true,
     getForm: function () {
         if (!this.form) {
@@ -56,7 +56,7 @@ Ext.define('MyApp.view.config.SchemaNameList', {
             Msg.tip("请先选择需要查看的记录!");
             return;
         }
-        if(!r.get("table_name")) {
+        if (!r.get("table_name")) {
             Msg.tip("非实体表,没有对应的字段信息!");
             return;
         }
@@ -79,6 +79,20 @@ Ext.define('MyApp.view.config.SchemaNameList', {
         this.descList._var.schemaId = r.get("cd");
         this.descList.params.tableName = r.get("table_name") || r.get("cd");
         this.descListWin.show();
+    },
+    doReloadSchema: function () {
+        var r = this.getSelectedRecord();
+        if (!r) {
+            Msg.tip("请先选择需要查看的记录!");
+            return;
+        }
+        Request.post(this.serviceId, "reloadSchema", [r.get("cd")], function (json) {
+            if (json.code > 200) {
+                Msg.error(json.msg);
+                return;
+            }
+            Msg.tip(this.entryName + "重载成功!");
+        }, this)
     },
     onRowSelect: function (grid, record) {
         this.loadItems(record);

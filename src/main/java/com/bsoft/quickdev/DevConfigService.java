@@ -5,6 +5,7 @@ import com.bsoft.utils.S;
 import ctd.util.annotation.RpcService;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 开发助手
@@ -20,6 +21,8 @@ public class DevConfigService {
     private static final String PageSize = "pageSize";
     private static final String CND = "cnd";
     private static final String SORT = "sort";
+
+    private Map<String, Object> tempCache = new ConcurrentHashMap<>();
 
     /**
      * 获取表字段信息
@@ -38,12 +41,23 @@ public class DevConfigService {
 
     @RpcService
     public List<Map<String, Object>> getSchema(String schemaId) {
-        String sql = "select b.id,b.cd,b.name,b.type,b.dic_id,b.dic_prop,b.defaultValue,b.width,b.length,b.fg_vir,b.fg_nul,b.fg_hid,b.fg_key,b.fg_filter from c_sy_schema a,c_sy_schema_item b where a.id=b.sid and a.cd=:id order by b.sort";
-        Map<String, Object> p = new HashMap<>(16);
-        p.put("id", schemaId);
-        return simpleDAO.queryData(sql, p);
+        if (!tempCache.containsKey(schemaId)) {
+            String sql = "select b.id,b.cd,b.name,b.type,b.dic_id,b.dic_prop,b.defaultValue,b.width,b.length,b.fg_vir,b.fg_nul,b.fg_hid,b.fg_key,b.fg_filter from c_sy_schema a,c_sy_schema_item b where a.id=b.sid and a.cd=:id order by b.sort";
+            Map<String, Object> p = new HashMap<>(16);
+            p.put("id", schemaId);
+            tempCache.put(schemaId, simpleDAO.queryData(sql, p));
+        }
+        return (List<Map<String, Object>>) tempCache.get(schemaId);
     }
 
+    /**
+     * 清除缓存
+     * @param schemaId
+     */
+    @RpcService
+    public void reloadSchema(String schemaId) {
+        tempCache.remove(schemaId);
+    }
 
     @RpcService
     public List<Map<String, Object>> getSchemaName(String schemaId) {
@@ -230,10 +244,12 @@ public class DevConfigService {
      * @param dicProp
      */
     @RpcService
-    public void saveItemDicProp(String op ,Map<String, Object> dicProp) {
+    public void saveItemDicProp(String op, Map<String, Object> dicProp) {
         // 已经存在的不保存
         updateData("c_sy_schema_item", dicProp);
     }
+
+
 
     /**
      * 获取字典类型字段的扩展属性
