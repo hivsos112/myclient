@@ -9,7 +9,8 @@ Ext.define('MyApp.view.config.SchemaItemList', {
     title: "Schema字段",
     autoLoadData: false,
     actions: [{name: "新建", cmd: "create"}, {name: "修改", cmd: "update"},
-        {name: "保存当前排序", cmd: "saveSort", tooltip: "用鼠标选中行拖拽进行上下排序"}],
+        {name: "保存当前排序", cmd: "saveSort", tooltip: "用鼠标选中行拖拽进行上下排序"},
+        {name: "字典项配置", cmd: "dicConfig"}],
     enablePaging: true,
     exConfig: function (cfg) {
         Ext.apply(cfg.viewConfig, {
@@ -22,12 +23,7 @@ Ext.define('MyApp.view.config.SchemaItemList', {
     getForm: function () {
         if (!this.form) {
             var form = Ext.create("MyApp.view.config.SchemaItemForm", {
-                entryName: this.entryName,
-                serviceId: "chis.config",
-                saveMethod: "saveSchemaItem",
-                loadMethod: "getData",
-                buttonPos: "bottom",
-                actions: [{name: "保存", cmd: "save"}, {name: "关闭", cmd: "close"}]
+                entryName: this.entryName
             });
             form.on("save", this.loadData, this);
             form.on("winShow", this.onFormShow, this);
@@ -77,5 +73,12 @@ Ext.define('MyApp.view.config.SchemaItemList', {
                 Msg.error(json.msg);
             }
         }, this)
+    },
+    doDicConfig: function () {
+        if (!this.dicForm) {
+            var form = Ext.create("MyApp.view.config.SchemaItemDicForm");
+            this.dicForm = form;
+        }
+        return this.dicForm;
     }
 });

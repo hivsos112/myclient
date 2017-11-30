@@ -19,7 +19,7 @@ Ext.define('MyApp.view.config.SchemaNameList', {
                 saveMethod: "saveSchemaName",
                 loadMethod: "getData",
                 buttonPos: "bottom",
-                actions: [{name: "保存", cmd: "save"}, {name: "关闭", cmd: "close"}]
+                actions: [{name: "保存", cmd: "save", formBind: true}, {name: "关闭", cmd: "close"}]
             });
             form.on("save", this.loadData, this);
             form.on("winShow", this.onFormShow, this)
@@ -54,6 +54,10 @@ Ext.define('MyApp.view.config.SchemaNameList', {
         var r = this.getSelectedRecord();
         if (!r) {
             Msg.tip("请先选择需要查看的记录!");
+            return;
+        }
+        if(!r.get("table_name")) {
+            Msg.tip("非实体表,没有对应的字段信息!");
             return;
         }
         if (!this.descListWin) {
