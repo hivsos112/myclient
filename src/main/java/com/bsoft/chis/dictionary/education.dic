@@ -1,0 +1,9 @@
+<dic name="学历">
+    <item key="1" text="博士"/>
+    <item key="2" text="研究生"/>
+    <item key="3" text="本科"/>
+    <item key="4" text="专科"/>
+    <item key="5" text="高中"/>
+    <item key="6" text="初中"/>
+    <item key="6" text="小学"/>
+</dic>

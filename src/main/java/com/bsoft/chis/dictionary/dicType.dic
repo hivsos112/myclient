@@ -1,0 +1,8 @@
+<dic name="字典类型">
+    <item key="10" text="下拉列表"/>
+    <item key="11" text="下拉树"/>
+    <item key="12" text="可选下拉树"/>
+    <item key="13" text="多选下拉列表"/>
+    <item key="20" text="多选项(form)"/>
+    <item key="30" text="单选项(form)"/>
+</dic>
