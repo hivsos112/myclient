@@ -77,17 +77,5 @@ Ext.define('MyApp.view.config.SchemaItemList', {
                 Msg.error(json.msg);
             }
         }, this)
-    },
-    doQueryFiled: function () {
-        var r = this.getSelectedRecord();
-        if (!r) {
-            Msg.tip("请先选择需要查看的记录!");
-            return;
-        }
-
-    },
-    onRowClick: function (grid, record, tr, rowIndex) {
-        var id = record.get("id");
-        this.fireEvent("showItem", id);
     }
 });
