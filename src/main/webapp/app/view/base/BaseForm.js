@@ -4,6 +4,7 @@
 Ext.define('MyApp.view.base.BaseForm', {
     extend: 'MyApp.view.base.BaseModule',
     xtype: 'base-form',
+    autoLoadData: true,
     initPanel: function () {
         var me = this;
         if (me.form)
@@ -11,11 +12,14 @@ Ext.define('MyApp.view.base.BaseForm', {
         if (!me.entryName) {
             return;
         }
+        if (this.init) {
+            this.init.call(this);
+        }
         var cfg = {
             title: me.title,
             defaultType: 'textfield',
             bodyPadding: 10,
-            autoScroll : true,
+            autoScroll: true,
             defaults: {
                 labelWidth: me.labelWidth || 120,
                 anchor: '100%'
@@ -37,9 +41,19 @@ Ext.define('MyApp.view.base.BaseForm', {
 
         this.exConfig(cfg);
         var form = Ext.create("Ext.form.Panel", cfg);
-        form.on("afterrender", this.onReady, this);
+        form.on("afterrender", this._onReady, this);
         me.form = form;
         return form;
+    },
+    /**
+     * 基础实现,非特殊情况不允许子类重写
+     * @private
+     */
+    _onReady: function () {
+        if (this.autoLoadData) {
+            this.loadData();
+        }
+        this.onReady();
     },
     onReady: function () {
 
@@ -84,13 +98,13 @@ Ext.define('MyApp.view.base.BaseForm', {
     loadData: function () {
         this.clear();
         if (this.initDataId) { // pkey
-            Request.post((this.loadServiceId || this.serviceId), this.loadMethod, [this.entryName, this.initDataId], function (resp) {
-                if (resp.code > 200) {
-                    Msg.error(resp.msg);
+            Request.post((this.loadServiceId || this.serviceId), this.loadMethod, [this.entryName, this.initDataId], function (json) {
+                if (json.code > 200) {
+                    Msg.error(json.msg);
                     return;
                 }
-                this.fireEvent("loadData", resp.body);
-                this.initFormData(resp.body);
+                this.initFormData(json.body);
+                this.fireEvent("loadData", json.body);
             }, this)
         }
     },
@@ -145,34 +159,9 @@ Ext.define('MyApp.view.base.BaseForm', {
             if (!item.fg_nul) {
                 f.labelStyle = "color:red;"
             }
-
             // 字典类型
             if (item.dic_id) {
-                var url = item.dic_id + ".dic";
-                var reader = Ext.create("Ext.data.reader.Json", {
-                    rootProperty: 'items'
-                });
-                var model = Ext.create("Ext.data.Model", {
-                    fields: ['key', 'text']
-                });
-                var store = Ext.create("Ext.data.Store", {
-                    model: model,
-                    pageSize: this.pageSize || 50,
-                    proxy: {
-                        type: 'ajax',
-                        url: url,
-                        reader: reader
-                    }
-                });
-                Ext.apply(f, {
-                    displayField: "text",
-                    valueField: "key",
-                    // queryMode: 'local',
-                    typeAhead: true,
-                    autoLoadOnValue: true,
-                    store: store
-                });
-                fields.push(Ext.create("Ext.form.field.ComboBox", f));
+                fields.push(this.createDic(f, item));
                 continue;
             }
             var xtype = "textfield";
@@ -205,5 +194,74 @@ Ext.define('MyApp.view.base.BaseForm', {
             fields.push(f);
         }
         return fields;
+    },
+    createDic: function (cfg, item) {
+        var url = item.dic_id + ".dic";
+        var dic_prop = $decode((item.dic_prop || "{}"));
+        var dicType = dic_prop.type;
+        debugger
+        if (dicType === "20" || dicType === "30") { // checkbox radio group
+            var response = Ext.Ajax.request({
+                url: url,
+                async: false
+            });
+            if (response.status === 200) { // 成功
+                var json = $decode(response.responseText);
+                Ext.apply(cfg, {
+                    xtype: (dicType === "20" ? 'checkboxgroup' : "radiogroup"),
+                    cls: 'x-check-group-alt',
+                    columns: dic_prop.columnCount || 3,
+                    items: this.getDicItems(json.items, item.defaultValue)
+                });
+                return cfg;
+            }
+            return;
+        }
+        var reader = Ext.create("Ext.data.reader.Json", {
+            rootProperty: 'items'
+        });
+        var model = Ext.create("Ext.data.Model", {
+            fields: ['key', 'text']
+        });
+        var storeType = "Ext.data.Store";
+        if (dicType === "11" || dicType === "13") {
+            // 下拉树 待实现
+        }
+        var store = Ext.create(storeType, {
+            model: model,
+            pageSize: this.pageSize || 50,
+            proxy: {
+                type: 'ajax',
+                url: url,
+                reader: reader
+            }
+        });
+        Ext.apply(cfg, {
+            displayField: "text",
+            valueField: "key",
+            // queryMode: 'local',
+            typeAhead: true,
+            autoLoadOnValue: true,
+            store: store
+        });
+        if (dicType === "12") {
+            cfg.xtype = "tagfield";
+            cfg.filterPickList = true;
+            cfg.queryMode = "local";
+            return cfg;
+        }
+        return Ext.create("Ext.form.field.ComboBox", cfg);
+    },
+    getDicItems: function (items, defaultValue) {
+        var a = [];
+        for (var i = 0; i < items.length; i++) {
+            var it = items[i];
+            var cfg = {boxLabel: it.text, inputValue: it.key};
+            if (it.key == defaultValue) {
+                cfg.checked = true;
+            }
+            a.push(cfg);
+        }
+        return a;
     }
 });

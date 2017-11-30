@@ -19,7 +19,7 @@ Ext.define('MyApp.view.base.BaseList', {
     /** *列表查询参数* */
     /** *******End******* */
     xtype: 'base-list',
-    requires: ["Ext.toolbar.Paging"],
+    requires: ["Ext.toolbar.Paging", "Ext.grid.filters.Filters"],
     /**
      * 初始查询参数
      * @returns {{}}
@@ -58,7 +58,9 @@ Ext.define('MyApp.view.base.BaseList', {
             columns: [],
             viewConfig: {
                 enableTextSelection: this.enableTextSelection
-            }
+            },
+            /** 列过滤插件 **/
+            plugins: ["gridfilters"]
         };
         var items = this.loadSchema(me.entryName);
         // columns
@@ -186,6 +188,10 @@ Ext.define('MyApp.view.base.BaseList', {
             if (item.type === "boolean") {
                 f.xtype = "checkcolumn";
                 f.disabled = true;
+            }
+            if (item.fg_filter) {
+                f.filter = item.dic_id ? "list" : item.type;
+
             }
             item.width ? f.width = item.width : f.flex = 1;
             Ext.apply(f, item.exCfg);

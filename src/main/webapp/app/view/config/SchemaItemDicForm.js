@@ -8,15 +8,22 @@ Ext.define('MyApp.view.config.SchemaItemDicForm', {
     saveMethod: "saveItemDicProp",
     loadMethod: "getItemDicProp",
     buttonPos: "bottom",
+    autoLoadData: false,
     actions: [{name: "保存", cmd: "save"}, {name: "关闭", cmd: "close"}],
     colCount: 1,
-    addListener: function () {
-        this.on("loadData", this.onLoadData, this)
+    init: function () {
+        this.on("winShow", this.onWinShow, this);
     },
-    onLoadData: function (data) {
-        var dicProp = data.dic_prop;
-        data = $decode(dicProp);
-        return data;
+    initFormData: function (data) {
+        if (data) {
+            var dicProp = data.dic_prop;
+            data = $decode((dicProp || "{}"));
+        }
+        // 参数必须数组形式
+        this.callParent([data]);
+    },
+    onWinShow: function () {
+        this.loadData();
     },
     getServerData: function (data) {
         var ndata = {};

@@ -30,7 +30,8 @@ Ext.define("MyApp.view.base.BaseModule", {
                     cmd: action.cmd,
                     scope: this,
                     handler: this.doAction,
-                    tooltip: action.tooltip
+                    tooltip: action.tooltip,
+                    formBind : action.formBind
                 })
             }
         }

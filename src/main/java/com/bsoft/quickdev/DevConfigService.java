@@ -38,7 +38,7 @@ public class DevConfigService {
 
     @RpcService
     public List<Map<String, Object>> getSchema(String schemaId) {
-        String sql = "select b.id,b.cd,b.name,b.type,b.dic_id,b.width,b.length,b.fg_vir,b.fg_nul,b.fg_hid,fg_key from c_sy_schema a,c_sy_schema_item b where a.id=b.sid and a.cd=:id order by b.sort";
+        String sql = "select b.id,b.cd,b.name,b.type,b.dic_id,b.dic_prop,b.defaultValue,b.width,b.length,b.fg_vir,b.fg_nul,b.fg_hid,b.fg_key,b.fg_filter from c_sy_schema a,c_sy_schema_item b where a.id=b.sid and a.cd=:id order by b.sort";
         Map<String, Object> p = new HashMap<>(16);
         p.put("id", schemaId);
         return simpleDAO.queryData(sql, p);
@@ -224,6 +224,27 @@ public class DevConfigService {
         }
     }
 
+    /**
+     * 保存字典类型字段的扩展属性
+     *
+     * @param dicProp
+     */
+    @RpcService
+    public void saveItemDicProp(String op ,Map<String, Object> dicProp) {
+        // 已经存在的不保存
+        updateData("c_sy_schema_item", dicProp);
+    }
+
+    /**
+     * 获取字典类型字段的扩展属性
+     *
+     * @param pkey
+     */
+    @RpcService
+    public Map<String, Object> getItemDicProp(String entryName, Object pkey) {
+        entryName = "c_sy_schema_item";
+        return getData(entryName, pkey);
+    }
 
     /**
      * 删除schema信息

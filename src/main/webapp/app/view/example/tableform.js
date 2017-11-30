@@ -1,6 +1,6 @@
 Ext.define('MyApp.view.example.tableform', {
     extend: 'MyApp.view.base.TableForm',
-    entryName: "c_sy_schema",
+    entryName: "base_user",
     title : "表格表单",
     actions: [{name: "保存", cmd: "save"}],
     buttonPos : "bottom",

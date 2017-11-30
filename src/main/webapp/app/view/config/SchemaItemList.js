@@ -75,10 +75,18 @@ Ext.define('MyApp.view.config.SchemaItemList', {
         }, this)
     },
     doDicConfig: function () {
-        if (!this.dicForm) {
+        var r = this.getSelectedRecord();
+        if (!r) {
+            Msg.tip("请先选择需要修改的记录!");
+            return;
+        }
+        if (!this.dicFormWin) {
             var form = Ext.create("MyApp.view.config.SchemaItemDicForm");
             this.dicForm = form;
+            this.dicForm.initDataId = r.get("id");
+            this.dicFormWin = form.getWin(true, {title: "字典属性配置"});
         }
-        return this.dicForm;
+        this.dicForm.initDataId = r.get("id");
+        this.dicFormWin.show();
     }
 });
