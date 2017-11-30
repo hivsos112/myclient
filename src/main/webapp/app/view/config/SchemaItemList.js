@@ -9,7 +9,7 @@ Ext.define('MyApp.view.config.SchemaItemList', {
     title: "Schema字段",
     autoLoadData: false,
     actions: [{name: "新建", cmd: "create"}, {name: "修改", cmd: "update"},
-        {name: "保存当前排序", cmd: "saveSort"}],
+        {name: "保存当前排序", cmd: "saveSort", tooltip: "用鼠标选中行拖拽进行上下排序"}],
     enablePaging: true,
     exConfig: function (cfg) {
         Ext.apply(cfg.viewConfig, {

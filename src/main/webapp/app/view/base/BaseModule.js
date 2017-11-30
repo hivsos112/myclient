@@ -29,7 +29,8 @@ Ext.define("MyApp.view.base.BaseModule", {
                     text: action.name,
                     cmd: action.cmd,
                     scope: this,
-                    handler: this.doAction
+                    handler: this.doAction,
+                    tooltip : action.tooltip
                 })
             }
         }
