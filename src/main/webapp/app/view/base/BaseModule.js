@@ -30,7 +30,7 @@ Ext.define("MyApp.view.base.BaseModule", {
                     cmd: action.cmd,
                     scope: this,
                     handler: this.doAction,
-                    tooltip : action.tooltip
+                    tooltip: action.tooltip
                 })
             }
         }
@@ -51,12 +51,18 @@ Ext.define("MyApp.view.base.BaseModule", {
         }
     }
     ,
+    /**
+     * 获取当前窗口
+     * @param autoCreate 将调用对象的initPanel方法返回值作为窗口内容
+     * @param exCfg 窗体扩展配置
+     * @returns {Ext.window.Window|*}
+     */
     getWin: function (autoCreate, exCfg) {
         if (!this.win) {
             var cfg = {
                 extend: 'Ext.window.Window',
-                height: 300,
-                width: 400,
+                height: 500,
+                width: 600,
                 title: '窗口',
                 layout: 'fit',
                 shadow: true,
