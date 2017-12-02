@@ -83,23 +83,35 @@ Ext.define('MyApp.view.base.BaseList', {
         }
         this.exConfig(cfg);
         var grid = Ext.create("Ext.grid.Panel", cfg);
-        grid.on("afterrender", this.onReady, this);
+        grid.on("afterrender", this._onReady, this);
         grid.on("select", this.onRowSelect, this);
         grid.on("rowdblclick", this.onRowDblClick, this);
         me.grid = grid;
+        this.addEvent();
         return grid;
     },
     /**
      * 扩展配置
      * @param cfg
      */
-    exConfig: function (cfg) {
-
-    },
-    onReady: function () {
+    exConfig: Ext.emptyFn,
+    /**
+     * 界面渲染完成后调用
+     */
+    onReady: Ext.emptyFn,
+    /**
+     * 事件监听,如this.on("winShow",...);
+     */
+    addEvent : Ext.emptyFn,
+    /**
+     * 扩展配置
+     * @private
+     */
+    _onReady: function () {
         if (this.autoLoadData) {
             this.loadData();
         }
+        this.onReady();
     },
     /** 单击列调用,继承实现 入参: grid, record, tr, rowIndex */
     onRowSelect: Ext.emptyFn,

@@ -11,7 +11,7 @@ Ext.define('MyApp.view.config.SchemaItemDicForm', {
     autoLoadData: false,
     actions: [{name: "保存", cmd: "save"}, {name: "关闭", cmd: "close"}],
     colCount: 1,
-    init: function () {
+    addEvent : function () {
         this.on("winShow", this.onWinShow, this);
     },
     initFormData: function (data) {

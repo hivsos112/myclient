@@ -12,9 +12,6 @@ Ext.define('MyApp.view.base.BaseForm', {
         if (!me.entryName) {
             return;
         }
-        if (this.init) {
-            this.init.call(this);
-        }
         var cfg = {
             title: me.title,
             defaultType: 'textfield',
@@ -43,6 +40,7 @@ Ext.define('MyApp.view.base.BaseForm', {
         var form = Ext.create("Ext.form.Panel", cfg);
         form.on("afterrender", this._onReady, this);
         me.form = form;
+        this.addEvent();
         return form;
     },
     /**
@@ -55,16 +53,19 @@ Ext.define('MyApp.view.base.BaseForm', {
         }
         this.onReady();
     },
-    onReady: function () {
-
-    },
+    /**
+     * 界面渲染完成后调用
+     */
+    onReady: Ext.emptyFn,
+    /**
+     * 事件监听,如this.on("winShow",...);
+     */
+    addEvent: Ext.emptyFn,
     /**
      * 扩展配置
      * @param cfg
      */
-    exConfig: function (cfg) {
-
-    },
+    exConfig: Ext.emptyFn,
     doNew: function () {
         this.initDataId = null;
         this.clear();
@@ -177,6 +178,7 @@ Ext.define('MyApp.view.base.BaseForm', {
                     break;
                 case "date":
                     xtype = "datefield";
+                    f.format = "Y-m-d";
                     break;
                 case "time":
                 case "datetime":
@@ -199,7 +201,6 @@ Ext.define('MyApp.view.base.BaseForm', {
         var url = item.dic_id + ".dic";
         var dic_prop = $decode((item.dic_prop || "{}"));
         var dicType = dic_prop.type;
-        debugger
         if (dicType === "20" || dicType === "30") { // checkbox radio group
             var response = Ext.Ajax.request({
                 url: url,
