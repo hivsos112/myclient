@@ -13,4 +13,8 @@ public class S {
         }
         return o.toString();
     }
+
+    public static boolean isEmtpy(Object o) {
+        return o == null || "".equals(o.toString());
+    }
 }

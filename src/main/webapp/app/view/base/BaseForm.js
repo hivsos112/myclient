@@ -117,10 +117,26 @@ Ext.define('MyApp.view.base.BaseForm', {
     getServerData: function (data) {
         return data
     },
+    getValues: function () {
+        var data = {};
+        var items = this.items;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var f = this.form.getForm().findField(item.cd);
+            if (f) {
+                if (item.type === "boolean") {
+                    data[item.cd] = f.getValue() ? 1 : 0;
+                } else {
+                    data[item.cd] = f.getValue();
+                }
+            }
+        }
+        return data;
+    },
     doSave: function () {
         if ((this.saveServiceId || this.serviceId) && this.saveMethod) {
             if (this.form.getForm().isValid()) {
-                var data = this.getServerData(this.form.getForm().getValues());
+                var data = this.getServerData(this.getValues());
                 var op = "create";
                 if (this.initDataId) {
                     data[this.pkey] = this.initDataId;
@@ -222,7 +238,7 @@ Ext.define('MyApp.view.base.BaseForm', {
             rootProperty: 'items'
         });
         var model = Ext.create("Ext.data.Model", {
-            fields: ['key', 'text']
+            fields: (item.fields ? ['key', 'text'].concat(item.fields.split(",")) : ['key', 'text'])
         });
         var storeType = "Ext.data.Store";
         if (dicType === "11" || dicType === "13") {

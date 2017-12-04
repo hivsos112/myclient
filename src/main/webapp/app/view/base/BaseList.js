@@ -192,7 +192,7 @@ Ext.define('MyApp.view.base.BaseList', {
             var f = {
                 text: item.name,
                 sortable: false,
-                dataIndex: item.cd
+                dataIndex: (item.dic_id ? item.cd + "_text" : item.cd)
             };
             if (item.fg_hid) {
                 continue;
@@ -228,6 +228,12 @@ Ext.define('MyApp.view.base.BaseList', {
                 cfg.pkey = item.cd;
             }
             cfg.fields.push(c);
+            if(item.dic_id) {
+                cfg.fields.push({
+                    name: item.cd + "_text",
+                    type : "string"
+                });
+            }
         }
         return Ext.create("Ext.data.Model", cfg);
     }

@@ -2,6 +2,8 @@ package com.bsoft.quickdev;
 
 import com.bsoft.dao.SimpleDAO;
 import com.bsoft.utils.S;
+import ctd.controller.exception.ControllerException;
+import ctd.dictionary.DictionaryController;
 import ctd.util.annotation.RpcService;
 
 import java.util.*;
@@ -42,7 +44,7 @@ public class DevConfigService {
     @RpcService
     public List<Map<String, Object>> getSchema(String schemaId) {
         if (!tempCache.containsKey(schemaId)) {
-            String sql = "select b.id,b.cd,b.name,b.type,b.dic_id,b.dic_prop,b.defaultValue,b.width,b.length,b.fg_vir,b.fg_nul,b.fg_hid,b.fg_key,b.fg_filter from c_sy_schema a,c_sy_schema_item b where a.id=b.sid and a.cd=:id order by b.sort";
+            String sql = "select b.id,b.cd,b.name,b.type,b.dic_id,b.dic_prop,b.defaultValue,b.width,b.length,b.fg_vir,b.fg_nul,b.fg_hid,b.fg_key,b.fg_filter,b.alias from c_sy_schema a,c_sy_schema_item b where a.id=b.sid and a.cd=:id order by b.sort";
             Map<String, Object> p = new HashMap<>(16);
             p.put("id", schemaId);
             tempCache.put(schemaId, simpleDAO.queryData(sql, p));
@@ -52,6 +54,7 @@ public class DevConfigService {
 
     /**
      * 清除缓存
+     *
      * @param schemaId
      */
     @RpcService
@@ -76,7 +79,7 @@ public class DevConfigService {
     }
 
     @RpcService
-    public Map<String, Object> getTableData(Map<String, Object> body) {
+    public Map<String, Object> getTableData(Map<String, Object> body) throws ControllerException {
         int pageSize = 0;
         int pageNo = 1;
         long totalCount = 0;
@@ -106,16 +109,45 @@ public class DevConfigService {
             }
         }
         l = simpleDAO.queryData(sql.toString(), p);
+        // 设置字典值
+        setDicText(entryName, l);
         Map<String, Object> m = new HashMap<>(16);
         m.put("data", l);
         m.put("totalCount", totalCount);
         return m;
     }
 
+    /**
+     * 转换字典值
+     * @param entryName
+     * @param l
+     * @throws ControllerException
+     */
+    private void setDicText(String entryName, List<Map<String, Object>> l) throws ControllerException {
+        if (l == null || l.size() == 0) return;
+        List<Map<String, Object>> items = getSchema(entryName);
+        List<Map<String, Object>> dicItems = new ArrayList<>();
+        for (Map<String, Object> m : items) {
+            if (!S.isEmtpy(m.get("dic_id")) && l.get(0).containsKey(S.toString(m.get("cd")))) {
+                dicItems.add(m);
+            }
+        }
+        if(dicItems.size() == 0) return;
+        for(Map<String, Object> data : l) {
+            for (Map<String, Object> dic : dicItems) {
+                String cd = S.toString(dic.get("cd"));
+                data.put(cd + "_text", DictionaryController.instance().get(S.toString(dic.get("dic_id"))).getText(data.get(cd)));
+            }
+        }
+    }
+
     private String getFields(String entryName) {
         StringBuilder sb = new StringBuilder();
         List<Map<String, Object>> l = getSchema(entryName);
         for (Map<String, Object> m : l) {
+            if ("Y".equals(S.toString(m.get("fg_vir")))) {
+                continue;
+            }
             sb.append(m.get("cd")).append(",");
         }
         return sb.length() > 0 ? sb.substring(0, sb.length() - 1) : "";
@@ -127,8 +159,7 @@ public class DevConfigService {
         List<String> fields = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         String condition = null;
-        for (int i = 0; i < l.size(); i++) {
-            Map<String, Object> item = l.get(i);
+        for (Map<String, Object> item : l) {
             if ((boolean) item.get("fg_vir")) {
                 continue;
             }
@@ -248,7 +279,6 @@ public class DevConfigService {
         // 已经存在的不保存
         updateData("c_sy_schema_item", dicProp);
     }
-
 
 
     /**
