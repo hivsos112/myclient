@@ -5,12 +5,16 @@ Ext.define('MyApp.store.Menus', {
         text: '功能菜单',
         expanded: true,
         children: [{
-            text: '监控信息',
+            text: 'VUE嵌入',
             expanded: true,
             children: [{
                 leaf: true,
-                text: 'CPU使用率',
-                script: "MyApp.view.chart.SystemCpuUsage"
+                text: '提示信息',
+                script: "MyApp.view.example.vueform"
+            }, {
+                leaf: true,
+                text: '简单列表',
+                script: "MyApp.view.example.mytable"
             }
 
             ]
@@ -48,7 +52,15 @@ Ext.define('MyApp.store.Menus', {
             children: [{
                 leaf: true,
                 text: '基础配置',
-                script : "MyApp.view.config.SchemaConfigModule"
+                script: "MyApp.view.config.SchemaConfigModule"
+            }]
+        }, {
+            text: '布局管理',
+            expanded: true,
+            children: [{
+                leaf: true,
+                text: 'Border布局',
+                script: "MyApp.view.layout.LayoutAssistant"
             }]
         }]
     }

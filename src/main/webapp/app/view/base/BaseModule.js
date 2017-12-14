@@ -25,14 +25,22 @@ Ext.define("MyApp.view.base.BaseModule", {
         if (this.actions && this.actions.length > 0) {
             for (var i = 0; i < actions.length; i++) {
                 var action = actions[i];
-                buttons.push({
+                var btn = {
                     text: action.name,
                     cmd: action.cmd,
                     scope: this,
                     handler: this.doAction,
-                    tooltip: action.tooltip,
-                    formBind : action.formBind
-                })
+                    tooltip: action.tooltip, // 按钮提示信息
+                    formBind: action.formBind // 安装可用状态与form表单校验关联
+                };
+                if (action.bind) {
+                    btn.bind = action.bind;
+                }
+                // 按钮api配置项
+                if (action.exCfg) {
+                    Ext.apply(btn, exCfg);
+                }
+                buttons.push(btn);
             }
         }
         return buttons;
@@ -54,7 +62,7 @@ Ext.define("MyApp.view.base.BaseModule", {
     ,
     /**
      * 获取当前窗口
-     * @param autoCreate 将调用对象的initPanel方法返回值作为窗口内容
+     * @param autoCreate 将调用对象的initPanel方法返回值作为窗体内容
      * @param exCfg 窗体扩展配置
      * @returns {Ext.window.Window|*}
      */
@@ -85,6 +93,7 @@ Ext.define("MyApp.view.base.BaseModule", {
                 this.fireEvent("winShow");
             }, this)
             this.win = win;
+            this.win.instance = this;
         }
         return this.win;
     }

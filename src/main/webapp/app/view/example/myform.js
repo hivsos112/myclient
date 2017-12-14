@@ -5,6 +5,7 @@ Ext.define('MyApp.view.example.myform', {
     actions: [{name: "保存", cmd: "save"}],
     doSave : function () {
         Msg.info("Form表单数据:" + Ext.encode(this.form.getForm().getValues()));
+
     }
 });
 

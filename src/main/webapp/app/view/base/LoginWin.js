@@ -3,6 +3,8 @@ Ext.define('MyApp.view.base.LoginWin', {
     xtype: 'login',
     requires: [
         'Ext.form.Panel',
+        'Ext.data.Store',
+        'Ext.form.field.ComboBox',
         'MyApp.model.base.LoginController'
     ],
     viewModel: {
@@ -44,7 +46,7 @@ Ext.define('MyApp.view.base.LoginWin', {
             listeners: {
                 blur: 'loadRoles'
             },
-            value : "admin"
+            value: "admin"
         }, {
             name: 'password',
             fieldLabel: '密码',
@@ -53,21 +55,21 @@ Ext.define('MyApp.view.base.LoginWin', {
             listeners: {
                 blur: 'loadRoles'
             },
-            value : "123"
+            value: "123"
         }, {
             xtype: 'combobox',
             name: 'role',
-            store: {
-                xtype: 'store',
-                queryMode: 'local',
+            mode: 'local',
+            autoLoadOnValue : true,
+            store: Ext.create("Ext.data.Store", {
                 fields: [
                     {name: 'id', type: 'int'},
                     {name: 'roleName', type: 'string'},
                     {name: 'manageUnit', type: 'string'},
                     {name: 'manageUnitName', type: 'string'}
                 ],
-                autoLoad: true
-            },
+                data : []
+            }),
             fieldLabel: '角色',
             displayField: 'roleName',
             valueField: 'id',

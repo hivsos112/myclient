@@ -1,4 +1,5 @@
 (function (g) {
+    var config = {debug: true}
     "use strict";
     var ns = function (s) {
         if (s === "") {

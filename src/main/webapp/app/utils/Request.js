@@ -52,6 +52,10 @@ Ext.define("MyApp.utils.Request", {
                     }
                 });
                 if (response.status > 200) {
+                    if (response.status === 403) {
+                        Ext.Msg.alert("警告", "服务状态错误,请重新登录!");
+                        return;
+                    }
                     Ext.Msg.alert("错误", response.statusText);
                     return;
                 }

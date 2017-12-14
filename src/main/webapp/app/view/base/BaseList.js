@@ -131,7 +131,7 @@ Ext.define('MyApp.view.base.BaseList', {
         Ext.apply(store.proxy.extraParams, this.requestData);
     },
     onLoadData: function (store, records) {
-        if (this.selectFirst && records.length > 0) {
+        if (this.selectFirst && records && records.length > 0) {
             this.selectRow(0);
         }
     },
