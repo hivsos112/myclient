@@ -18,6 +18,7 @@ Ext.define('MyApp.view.example.vueform', {
         return "<template> " +
             "<el-button @click=\"visible = true\">alert提示</el-button>" +
             "<el-button @click=\"open\">提示信息</el-button>" +
+            " <el-button :plain=\"true\" @click=\"openTop\">顶部提示</el-button>" +
             "<el-dialog :visible.sync=\"visible\" title=\"Hello world\">" +
             "<p>欢迎使用 Element</p>" +
             "</el-dialog>" +
@@ -43,6 +44,9 @@ Ext.define('MyApp.view.example.vueform', {
                     title: '标题名称',
                     message: "这里是提示信息，这里是提示信息这里是提示信息"
                 });
+            },
+            openTop : function () {
+                this.$message('这是一条消息提示');
             }
         }
     }

@@ -52,6 +52,7 @@ Ext.define('MyApp.model.base.LoginController', {
         return msg;
     },
     onLoginClick: function () {
+
         var form = this.getView().getForm();
         var roleComb = form.findField("role");
         var urt = roleComb.getValue();

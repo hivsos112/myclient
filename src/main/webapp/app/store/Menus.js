@@ -15,6 +15,10 @@ Ext.define('MyApp.store.Menus', {
                 leaf: true,
                 text: '简单列表',
                 script: "MyApp.view.example.mytable"
+            }, {
+                leaf: true,
+                text: '动态数据列表',
+                script: "MyApp.view.example.dynTable"
             }
 
             ]

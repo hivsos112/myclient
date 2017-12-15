@@ -1,41 +1,49 @@
 <template>
-    <div><el-button type="primary" size="small" @click="loadData">加载数据</el-button></div>
+    <el-button type="primary" size="small" @click="loadData">加载数据</el-button>
     <el-table
             :data="tableData"
-            border
-            style="width: 100%">
+            :height="tableHeight"
+            :header-row-style="headerStyle"
+            border>
         <el-table-column
-                prop="date"
-                label="日期"
+                fixed
+                label="-"
+                type="index">
+        </el-table-column>
+        <el-table-column
+                prop="personName"
+                label="用户名"
                 width="180">
         </el-table-column>
         <el-table-column
-                prop="name"
-                label="姓名"
+                prop="sex"
+                label="性别代码"
                 width="180">
         </el-table-column>
         <el-table-column
-                prop="address"
-                label="地址">
-        </el-table-column>
-        <el-table-column
-                prop="tag"
+                prop="sex_text"
                 label="标签"
                 width="100"
-                :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+                :filters="[{ text: '男性', value: '男性' }, { text: '女性', value: '女性' }]"
                 :filter-method="filterTag"
                 filter-placement="bottom-end">
             <template slot-scope="scope">
                 <el-tag
-                        :type="scope.row.tag === '家' ? 'primary' : 'success'"
-                        close-transition>{{scope.row.tag}}
+                        :type="scope.row.sex_text === '男性' ? 'primary' : 'success'"
+                        close-transition>{{scope.row.sex_text}}
                 </el-tag>
             </template>
         </el-table-column>
-        <el-table-column label="操作" width="200">
+        <el-table-column
+                prop="dob"
+
+                label="出生日期">
+        </el-table-column>
+        <el-table-column label="操作" width="180" fixed="right">
             <template slot-scope="scope">
                 <el-button
                         size="mini"
+                        type="primary"
                         @click="handleEdit(scope.$index, scope.row)">编辑
                 </el-button>
                 <el-button
